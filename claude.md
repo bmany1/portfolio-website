@@ -78,16 +78,17 @@ Reference sites analyzed for design patterns:
 **Status**: Completed 2025-11-10
 **Commit**: `8b3119e` - Initial Next.js setup with dark theme and basic structure
 
-### Phase 2: Sanity CMS Setup ⏳ NEXT
-- [ ] Install Sanity dependencies (`@sanity/client`, `next-sanity`, `@sanity/vision`)
-- [ ] Create Sanity Studio (separate studio app or embedded)
-- [ ] Define schemas:
-  - Projects schema (title, description, images, tech stack, links)
-  - Case Studies schema (detailed project breakdowns)
-  - About schema (bio, skills, experience)
-- [ ] Set up Sanity client in Next.js
-- [ ] Configure GROQ queries
+### Phase 2: Sanity CMS Setup ⏳ IN PROGRESS
+- [x] Install Sanity dependencies (`sanity`, `next-sanity`, `@sanity/vision`)
+- [x] Create embedded Sanity Studio at `/studio` route
+- [x] Define schemas:
+  - [x] Projects schema (title, slug, description, images, tech stack, links, featured flag)
+  - [x] About schema (bio, profile image, social links, skills)
+- [x] Set up Sanity client in Next.js
+- [ ] Create Sanity project and get Project ID (see SANITY_SETUP.md)
+- [ ] Configure CORS for local development
 - [ ] Test content creation in Sanity Studio
+- [ ] Create example GROQ queries for fetching data
 
 ### Phase 3: Core Pages & Layout (Week 2-3)
 - [ ] Homepage:
@@ -143,12 +144,24 @@ portfolio-website/
 │   │   ├── globals.css           # Global styles, dark theme
 │   │   ├── projects/
 │   │   │   └── page.tsx          # Projects listing page
-│   │   └── about/
-│   │       └── page.tsx          # About page
+│   │   ├── about/
+│   │   │   └── page.tsx          # About page
+│   │   └── studio/
+│   │       └── [[...tool]]/
+│   │           └── page.tsx      # Embedded Sanity Studio
 │   ├── components/
 │   │   └── Navigation.tsx        # Fixed nav with links
+│   ├── sanity/
+│   │   ├── schemas/
+│   │   │   ├── project.ts        # Project content type
+│   │   │   ├── about.ts          # About content type
+│   │   │   └── index.ts          # Schema exports
+│   │   └── client.ts             # Sanity client config
 │   └── lib/                      # Utilities (empty, ready for use)
 ├── public/                       # Static assets
+├── sanity.config.ts              # Sanity Studio configuration
+├── .env.local                    # Environment variables (not in git)
+├── SANITY_SETUP.md               # Setup instructions
 ├── package.json
 ├── tailwind.config.ts
 ├── tsconfig.json
@@ -201,8 +214,17 @@ npm run lint         # Run ESLint
 - Using src/ directory for cleaner organization
 - Tailwind v4 with new @import syntax in globals.css
 
-## Questions/Decisions Pending
-- [ ] Sanity Studio: Embedded in Next.js app or separate deployment?
+## Questions/Decisions Made
+- [x] **Sanity Studio**: Embedded in Next.js app at `/studio` route (simpler deployment)
 - [ ] Project detail pages: Dynamic routes or static pages?
 - [ ] Analytics: Google Analytics, Vercel Analytics, or none?
 - [ ] Contact form: Simple email link, form with backend, or third-party service?
+
+## Current Session Progress
+- Phase 1 ✅ Complete
+- Phase 2 🔄 In Progress:
+  - Sanity packages installed
+  - Studio route created at `/studio`
+  - Schemas defined (Project, About)
+  - Client configuration ready
+  - **Next**: User needs to create Sanity project and add Project ID (see SANITY_SETUP.md)
