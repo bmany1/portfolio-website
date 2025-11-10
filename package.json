@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@portabletext/react": "^5.0.0",
     "@sanity/vision": "^4.14.2",
     "framer-motion": "^12.23.24",
     "next": "16.0.1",

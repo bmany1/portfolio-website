@@ -1,6 +1,26 @@
 import Link from "next/link";
+import { getFeaturedProjects } from "@/sanity/queries";
 
-export default function Home() {
+export default async function Home() {
+  // Fetch featured projects from Sanity
+  const featuredProjects = await getFeaturedProjects();
+
+  // Fallback placeholder projects if none exist in Sanity yet
+  const placeholderProjects = [
+    {
+      title: "E-Commerce Platform Redesign",
+      description: "Led the complete redesign of a multi-million dollar e-commerce platform, improving conversion rates by 40%.",
+      technologies: ["Product Strategy", "UX Design", "A/B Testing"],
+    },
+    {
+      title: "Mobile App Launch",
+      description: "Spearheaded the development and launch of a mobile-first experience, reaching 100K users in the first month.",
+      technologies: ["Mobile", "User Research", "Agile"],
+    },
+  ];
+
+  // Use Sanity projects if available, otherwise use placeholders
+  const displayProjects = featuredProjects.length > 0 ? featuredProjects : placeholderProjects;
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -74,24 +94,20 @@ export default function Home() {
 
           {/* Project Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {[
-              {
-                title: "E-Commerce Platform Redesign",
-                description: "Led the complete redesign of a multi-million dollar e-commerce platform, improving conversion rates by 40%.",
-                tags: ["Product Strategy", "UX Design", "A/B Testing"],
-              },
-              {
-                title: "Mobile App Launch",
-                description: "Spearheaded the development and launch of a mobile-first experience, reaching 100K users in the first month.",
-                tags: ["Mobile", "User Research", "Agile"],
-              },
-            ].map((project, i) => (
+            {displayProjects.map((project, i) => (
               <div
-                key={i}
+                key={project._id || i}
                 className="group border border-white/10 rounded-2xl overflow-hidden hover:border-white/30 transition-all duration-300"
               >
-                {/* Project Image Placeholder */}
+                {/* Project Image */}
                 <div className="aspect-[16/10] bg-gradient-to-br from-white/5 to-white/[0.02] relative overflow-hidden">
+                  {project.mainImage?.asset?.url ? (
+                    <img
+                      src={project.mainImage.asset.url}
+                      alt={project.title}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : null}
                   <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
 
@@ -105,16 +121,18 @@ export default function Home() {
                   </p>
 
                   {/* Tags */}
-                  <div className="flex flex-wrap gap-2">
-                    {project.tags.map((tag, tagIndex) => (
-                      <span
-                        key={tagIndex}
-                        className="text-xs font-mono text-white/40 px-3 py-1 border border-white/10 rounded-full"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
+                  {project.technologies && project.technologies.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {project.technologies.map((tag, tagIndex) => (
+                        <span
+                          key={tagIndex}
+                          className="text-xs font-mono text-white/40 px-3 py-1 border border-white/10 rounded-full"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
