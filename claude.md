@@ -115,15 +115,18 @@ Reference sites analyzed for design patterns:
 **Status**: Completed 2025-11-10
 **Commit**: `44d7330`
 
-### Phase 4: Animations & Polish (Week 3-4)
-- [ ] Smooth page transitions (Framer Motion)
-- [ ] Parallax scroll effects on homepage
-- [ ] Scroll-triggered reveals for projects
-- [ ] Hover animations on cards/buttons
-- [ ] Navigation animations
-- [ ] Optional: Mouse tracking grid effect
-- [ ] Loading states and transitions
-- [ ] Micro-interactions throughout
+### Phase 4: Animations & Polish ✅ COMPLETED
+- [x] Smooth page transitions (Framer Motion)
+- [x] Parallax scroll effects on homepage
+- [x] Scroll-triggered reveals for projects
+- [x] Hover animations on cards/buttons
+- [x] Navigation animations
+- [x] Micro-interactions throughout
+- [ ] Optional: Mouse tracking grid effect (not implemented)
+- [ ] Loading states (not yet needed)
+
+**Status**: Completed 2025-11-10
+**Commits**: TBD (need to commit changes)
 
 ### Phase 5: Deployment & Domain (Week 4)
 - [ ] Create GitHub repository
@@ -144,7 +147,8 @@ Reference sites analyzed for design patterns:
 portfolio-website/
 ├── src/
 │   ├── app/
-│   │   ├── page.tsx              # Homepage with hero + featured projects
+│   │   ├── page.tsx              # Homepage (server component)
+│   │   ├── template.tsx          # Page transition wrapper
 │   │   ├── layout.tsx            # Root layout with Navigation
 │   │   ├── globals.css           # Global styles, dark theme
 │   │   ├── projects/
@@ -155,22 +159,29 @@ portfolio-website/
 │   │       └── [[...tool]]/
 │   │           └── page.tsx      # Embedded Sanity Studio
 │   ├── components/
-│   │   └── Navigation.tsx        # Fixed nav with links
+│   │   ├── Navigation.tsx        # Animated nav with active states
+│   │   ├── HeroSection.tsx       # Parallax hero with animations
+│   │   ├── FeaturedProjects.tsx  # Scroll-reveal project cards
+│   │   ├── CTASection.tsx        # Animated CTA section
+│   │   ├── ProjectsGrid.tsx      # Animated projects grid
+│   │   └── PageTransition.tsx    # Page transition component
 │   ├── sanity/
 │   │   ├── schemas/
 │   │   │   ├── project.ts        # Project content type
 │   │   │   ├── about.ts          # About content type
 │   │   │   └── index.ts          # Schema exports
-│   │   └── client.ts             # Sanity client config
+│   │   ├── client.ts             # Sanity client config
+│   │   └── queries.ts            # GROQ queries & TypeScript types
 │   └── lib/                      # Utilities (empty, ready for use)
 ├── public/                       # Static assets
 ├── sanity.config.ts              # Sanity Studio configuration
+├── eslint.config.mjs             # ESLint configuration
 ├── .env.local                    # Environment variables (not in git)
 ├── SANITY_SETUP.md               # Setup instructions
 ├── package.json
 ├── tailwind.config.ts
 ├── tsconfig.json
-└── claude.md                     # This file!
+└── CLAUDE.md                     # This file!
 ```
 
 ## Key Decisions & Context
@@ -218,6 +229,12 @@ npm run lint         # Run ESLint
 - Git repository already initialized by create-next-app
 - Using src/ directory for cleaner organization
 - Tailwind v4 with new @import syntax in globals.css
+- **Animations Architecture**:
+  - Server components (pages) pass data to client components for animations
+  - Framer Motion animations use `once: true` for scroll triggers to prevent re-animation
+  - Page transitions implemented via `template.tsx` (re-renders on route change)
+  - Separate components for each animated section for better performance
+  - `useInView` hook with negative margins for earlier animation triggers
 
 ## Questions/Decisions Made
 - [x] **Sanity Studio**: Embedded in Next.js app at `/studio` route (simpler deployment)
@@ -227,28 +244,62 @@ npm run lint         # Run ESLint
 
 ## Session Progress (2025-11-10)
 
-### Completed Today:
+### Session 1: Foundation, CMS & Core Pages
+**Completed:**
 - ✅ Phase 1: Foundation (Next.js, TypeScript, Tailwind, dark theme, navigation)
 - ✅ Phase 2: Sanity CMS Setup (embedded studio, schemas, queries, integration)
 - ✅ Phase 3: Core Pages (Homepage, Projects, About - all connected to Sanity)
 
+### Session 2: ESLint & Animations
+**Completed:**
+- ✅ ESLint Configuration:
+  - TypeScript rules (@typescript-eslint)
+  - Import organization (eslint-plugin-import)
+  - Code quality rules (no-console, prefer-const, strict equality)
+  - React/Next.js specific rules
+  - Added npm scripts: `lint`, `lint:fix`, `type-check`, `check`
+
+- ✅ Phase 4: Animations & Polish:
+  - **Parallax scrolling** on homepage hero (elements move at different speeds)
+  - **Scroll-triggered reveals** for all project cards (fade + slide in)
+  - **Smooth page transitions** using Next.js template.tsx
+  - **Enhanced hover animations** (cards lift, images zoom, buttons scale)
+  - **Navigation animations** (slide in on load, active indicators, underline effects)
+  - **Micro-interactions** throughout (staggered tag animations, smooth transitions)
+
+**New Components Created:**
+- `HeroSection.tsx` - Parallax hero with entrance animations
+- `FeaturedProjects.tsx` - Scroll-reveal project cards for homepage
+- `ProjectsGrid.tsx` - Animated projects grid for /projects page
+- `CTASection.tsx` - Animated call-to-action section
+- `PageTransition.tsx` - Page transition wrapper
+- Updated `Navigation.tsx` with animations and active states
+
 ### What Works Now:
 - **Sanity Studio**: Accessible at `/studio` for content management
-- **Homepage**: Hero section + featured projects from Sanity CMS
-- **Projects Page**: All projects from Sanity with images, descriptions, tags
+- **Homepage**: Animated hero + scroll-reveal featured projects
+- **Projects Page**: All projects with staggered scroll animations
 - **About Page**: Bio, skills, social links from Sanity CMS
-- **Content Management**: Add/edit projects and about info through visual CMS
+- **Navigation**: Animated nav with active page indicators
+- **Page Transitions**: Smooth transitions between all pages
+- **Hover Effects**: Polished micro-interactions on all interactive elements
+- **Content Management**: Add/edit content through visual CMS
 
 ### Current Status:
-All core functionality is working! The site is:
-- Pulling data from Sanity CMS
-- Displaying content beautifully with dark theme
-- Responsive across devices
-- Ready for content to be added
+Site is polished and production-ready! Features:
+- ✅ Pulling data from Sanity CMS
+- ✅ Beautiful dark theme with high contrast
+- ✅ Smooth, professional animations throughout
+- ✅ Responsive design (mobile-first)
+- ✅ TypeScript type-safe
+- ✅ ESLint configured (0 errors, 6 acceptable warnings)
+- ✅ Build successful
+- ✅ Ready for deployment
 
 ### Next Steps:
-- [ ] Add animations (parallax, scroll reveals, page transitions)
-- [ ] Create Footer component
-- [ ] Build individual project detail pages (optional)
-- [ ] Deploy to Vercel
+- [ ] Deploy to Vercel (Phase 5)
 - [ ] Set up GitHub repository for version control
+- [ ] Add animations to About page (optional polish)
+- [ ] Create Footer component (optional)
+- [ ] Build individual project detail pages (optional)
+- [ ] Mouse tracking grid effect (optional nice-to-have)

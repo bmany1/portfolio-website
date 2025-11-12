@@ -1,5 +1,6 @@
-import { getAbout } from "@/sanity/queries";
 import { PortableText } from "@portabletext/react";
+
+import { getAbout } from "@/sanity/queries";
 
 export default async function AboutPage() {
   // Fetch about page content from Sanity
@@ -84,7 +85,7 @@ export default async function AboutPage() {
         <div>
           <h2 className="text-3xl font-bold mb-6">Get in Touch</h2>
           <p className="text-lg text-white/60 mb-8 max-w-2xl">
-            I'm always open to discussing new opportunities, collaborations, or just chatting about product and technology.
+            I&apos;m always open to discussing new opportunities, collaborations, or just chatting about product and technology.
           </p>
 
           <div className="flex flex-wrap gap-4">

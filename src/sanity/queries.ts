@@ -19,10 +19,17 @@ export interface Project {
   order: number;
 }
 
+// Portable Text block type
+export interface PortableTextBlock {
+  _key: string;
+  _type: string;
+  [key: string]: unknown;
+}
+
 export interface About {
   _id: string;
   title: string;
-  bio: any[]; // Portable Text blocks
+  bio: PortableTextBlock[];
   profileImage?: {
     asset: {
       _ref: string;
