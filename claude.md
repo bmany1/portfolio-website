@@ -27,9 +27,11 @@ Building a custom portfolio website for Bryan Many (Product Manager) to replace 
 ## Design Goals
 
 ### Theme
-- Dark theme (#0a0a0a background, #ededed text)
-- Minimalist, modern aesthetic
-- High contrast for readability
+- **Navy dark theme** (#2F2E2E background, #FFFFFF text)
+- **Golden-yellow accent** (#FBBF24) for highlights and CTAs
+- **Modern typography**: Inter (sans-serif) + Fira Code (monospace)
+- High contrast for maximum readability
+- Minimalist, sleek, and techy aesthetic
 
 ### Desired Features
 1. **Animations** (Priority order):
@@ -59,7 +61,8 @@ Reference sites analyzed for design patterns:
 3. **karlissaablay.com** - Parallax scrolling with layered elements
 4. **tuanmon.com** - Lazy loading, minimalist
 5. **samdickie.me** - Micro-interactions, audio feedback
-6. **danielroren.com** - Dark theme, animated underlines, Gatsby/React, Framer Motion
+6. **danielroren.com** ⭐ - Navy + golden-yellow palette, sleek techy aesthetic (primary color inspiration)
+7. **justinhinh.webflow.io** ⭐ - Homepage layout structure, company logos section, three-column value props (primary layout inspiration)
 
 ## Development Roadmap
 
@@ -126,20 +129,26 @@ Reference sites analyzed for design patterns:
 - [ ] Loading states (not yet needed)
 
 **Status**: Completed 2025-11-10
-**Commits**: TBD (need to commit changes)
+**Commit**: `7999f2e` - Add comprehensive animations and polish
 
-### Phase 5: Deployment & Domain (Week 4)
-- [ ] Create GitHub repository
-- [ ] Push code to GitHub
-- [ ] Connect to Vercel
-- [ ] Configure environment variables
-- [ ] Deploy Sanity Studio
-- [ ] Test production build
+### Phase 5: Deployment & Domain ⏳ IN PROGRESS
+- [x] Create GitHub repository (bmany1/portfolio-website)
+- [x] Push code to GitHub
+- [x] Connect to Vercel
+- [x] Configure environment variables (Sanity project ID, dataset)
+- [x] Deploy Sanity Studio (accessible at production URL)
+- [x] Test production build (successful)
+- [x] Configure CORS for production URL
 - [ ] Transfer domain from Squarespace to Vercel
 - [ ] Configure DNS settings
 - [ ] Set up analytics (optional)
 - [ ] Performance optimization
 - [ ] SEO meta tags
+
+**Status**: Staging deployment complete 2025-11-13
+**Production URL**: https://portfolio-website-gamma-seven-65.vercel.app/
+**GitHub Repo**: https://github.com/bmany1/portfolio-website
+**Commits**: Multiple commits including `27a2353` - Redesign homepage
 
 ## Current Project Structure
 
@@ -160,7 +169,9 @@ portfolio-website/
 │   │           └── page.tsx      # Embedded Sanity Studio
 │   ├── components/
 │   │   ├── Navigation.tsx        # Animated nav with active states
-│   │   ├── HeroSection.tsx       # Parallax hero with animations
+│   │   ├── HeroSection.tsx       # Hero with headshot and resume link
+│   │   ├── WhereIveWorked.tsx    # Company logos section
+│   │   ├── WhatIDoSection.tsx    # Three-column value proposition
 │   │   ├── FeaturedProjects.tsx  # Scroll-reveal project cards
 │   │   ├── CTASection.tsx        # Animated CTA section
 │   │   ├── ProjectsGrid.tsx      # Animated projects grid
@@ -173,7 +184,11 @@ portfolio-website/
 │   │   ├── client.ts             # Sanity client config
 │   │   └── queries.ts            # GROQ queries & TypeScript types
 │   └── lib/                      # Utilities (empty, ready for use)
-├── public/                       # Static assets
+├── public/
+│   └── images/                   # Static assets
+│       ├── headshot.png          # Professional headshot
+│       ├── fox-logo.png          # Fox Corporation logo
+│       └── grayscale-logo.png    # Grayscale Investments logo
 ├── sanity.config.ts              # Sanity Studio configuration
 ├── eslint.config.mjs             # ESLint configuration
 ├── .env.local                    # Environment variables (not in git)
@@ -199,8 +214,9 @@ portfolio-website/
 - CMS allows easy updates without code changes
 
 ### Theme Choice
-- Dark theme selected (matches inspiration sites)
-- No theme toggle initially (keep it simple)
+- Navy dark theme with golden-yellow accents (inspired by danielroren.com)
+- Inter + Fira Code fonts for modern, techy aesthetic
+- No theme toggle (keep it simple, focused experience)
 
 ## Development Workflow
 
@@ -219,10 +235,13 @@ npm run lint         # Run ESLint
 ```
 
 ## Next Steps
-1. Set up Sanity.io CMS (Phase 2)
-2. Create content schemas for projects and about page
-3. Build out homepage hero section
-4. Implement first animations (parallax, scroll reveals)
+1. **Expand CMS schemas** to make all content editable (hero text, company logos, what I do section, resume link)
+2. Add real content through Sanity Studio
+3. Optional enhancements:
+   - Individual project detail pages
+   - Footer component
+   - About page animations
+   - Mouse tracking grid effect
 
 ## Notes & Learnings
 - Project uses Next.js 16.0.1 with Turbopack enabled
@@ -296,10 +315,48 @@ Site is polished and production-ready! Features:
 - ✅ Build successful
 - ✅ Ready for deployment
 
+### Session 3: Deployment & Redesign (2025-11-13)
+**Completed:**
+- ✅ **Phase 5 Deployment (Staging)**:
+  - Created GitHub repository: bmany1/portfolio-website
+  - Pushed all code to GitHub
+  - Connected to Vercel with auto-deployment
+  - Configured environment variables (Sanity project ID, dataset)
+  - Deployed to production URL: https://portfolio-website-gamma-seven-65.vercel.app/
+  - Configured CORS for production Sanity Studio access
+
+- ✅ **Major Homepage Redesign**:
+  - **Color Palette**: Changed from pure black (#0a0a0a) to navy (#2F2E2E) with golden-yellow accents (#FBBF24)
+  - **Typography**: Switched from Geist fonts to Inter + Fira Code
+  - **Text Color**: Pure white (#FFFFFF) for maximum contrast
+
+- ✅ **New Components Created**:
+  - `HeroSection.tsx` - Redesigned with headshot image and resume link (Justin Hinh inspired layout)
+  - `WhereIveWorked.tsx` - Company logos section with grayscale hover effect
+  - `WhatIDoSection.tsx` - Three-column value proposition (What I Do / What I Use / What You Can Expect)
+
+- ✅ **Assets Added**:
+  - Professional headshot (headshot.png)
+  - Fox Corporation logo (fox-logo.png)
+  - Grayscale Investments logo (grayscale-logo.png)
+
+- ✅ **Updated Components**:
+  - `FeaturedProjects.tsx` - Updated with accent color for CTA links
+  - Homepage layout - Integrated all new sections in proper order
+
+**New Homepage Structure:**
+1. Hero section with headshot and bio
+2. Where I've Worked (company logos)
+3. What I Do/Use/Expect (three columns)
+4. Featured Projects (scroll-reveal cards)
+5. CTA Section (contact)
+
+**Build Status**: ✅ Successful
+**Deployment**: ✅ Live on Vercel (auto-deploys on git push)
+
 ### Next Steps:
-- [ ] Deploy to Vercel (Phase 5)
-- [ ] Set up GitHub repository for version control
-- [ ] Add animations to About page (optional polish)
-- [ ] Create Footer component (optional)
-- [ ] Build individual project detail pages (optional)
-- [ ] Mouse tracking grid effect (optional nice-to-have)
+- [ ] Expand CMS schemas to make homepage content editable
+- [ ] Add real content through Sanity Studio
+- [ ] Optional: Individual project detail pages
+- [ ] Optional: Footer component
+- [ ] Optional: About page animations
