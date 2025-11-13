@@ -1,6 +1,8 @@
 import CTASection from "@/components/CTASection";
 import FeaturedProjects from "@/components/FeaturedProjects";
 import HeroSection from "@/components/HeroSection";
+import WhatIDoSection from "@/components/WhatIDoSection";
+import WhereIveWorked from "@/components/WhereIveWorked";
 import { getFeaturedProjects, type Project } from "@/sanity/queries";
 
 export default async function Home() {
@@ -33,13 +35,19 @@ export default async function Home() {
   const displayProjects = featuredProjects.length > 0 ? featuredProjects : placeholderProjects;
   return (
     <div className="min-h-screen">
-      {/* Hero Section with Parallax */}
+      {/* Hero Section */}
       <HeroSection />
 
-      {/* Featured Projects Section with Scroll Reveals */}
+      {/* Where I've Worked Section */}
+      <WhereIveWorked />
+
+      {/* What I Do Section */}
+      <WhatIDoSection />
+
+      {/* Featured Projects Section */}
       <FeaturedProjects projects={displayProjects} />
 
-      {/* Contact/CTA Section with Scroll Reveal */}
+      {/* Contact/CTA Section */}
       <CTASection />
     </div>
   );

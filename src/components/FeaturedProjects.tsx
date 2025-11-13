@@ -54,7 +54,7 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
         >
           <Link
             href="/projects"
-            className="inline-flex items-center gap-2 text-white/60 hover:text-white transition-colors group"
+            className="inline-flex items-center gap-2 text-accent hover:text-accent-hover transition-colors group font-medium"
           >
             <span>View all projects</span>
             <svg
