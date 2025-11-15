@@ -187,8 +187,10 @@ portfolio-website/
 ├── public/
 │   └── images/                   # Static assets
 │       ├── headshot.png          # Professional headshot
-│       ├── fox-logo.png          # Fox Corporation logo
-│       └── grayscale-logo.png    # Grayscale Investments logo
+│       ├── fox-logo.png          # Fox Corporation logo (original)
+│       ├── grayscale-logo.png    # Grayscale Investments logo (original)
+│       ├── fox-logo-white.png    # Fox logo white/transparent version
+│       └── grayscale-logo-white.png  # Grayscale logo white version
 ├── sanity.config.ts              # Sanity Studio configuration
 ├── eslint.config.mjs             # ESLint configuration
 ├── .env.local                    # Environment variables (not in git)
@@ -254,6 +256,10 @@ npm run lint         # Run ESLint
   - Page transitions implemented via `template.tsx` (re-renders on route change)
   - Separate components for each animated section for better performance
   - `useInView` hook with negative margins for earlier animation triggers
+- **Development Tools**:
+  - Chrome DevTools MCP server installed for browser debugging
+  - Enables Claude Code to inspect live pages, take screenshots, analyze console/network
+  - Installed via: `claude mcp add chrome-devtools npx chrome-devtools-mcp@latest`
 
 ## Questions/Decisions Made
 - [x] **Sanity Studio**: Embedded in Next.js app at `/studio` route (simpler deployment)
@@ -360,3 +366,35 @@ Site is polished and production-ready! Features:
 - [ ] Optional: Individual project detail pages
 - [ ] Optional: Footer component
 - [ ] Optional: About page animations
+
+### Session 4: Logo Contrast Fixes & Chrome DevTools MCP (2025-11-15)
+**Completed:**
+- ✅ **Where I've Worked Section Improvements**:
+  - Identified contrast issues: grayscale logos against navy background had low visibility
+  - Initial design used `grayscale` filter and `opacity-70` causing poor contrast
+  - Replaced with white/transparent logo versions for high contrast
+  - Assets updated:
+    - `fox-logo-white.png` (transparent PNG version)
+    - `grayscale-logo-white.png` (white version)
+
+- ✅ **WhereIveWorked Component Updates**:
+  - Removed problematic `grayscale` filter and `opacity-70` classes
+  - Added responsive hover animations (scale: 1.05, y: -4)
+  - Fixed slow hover response: reduced transition from 300ms to 150ms
+  - Removed CSS transitions that conflicted with Framer Motion
+  - Clean, fast hover animation with lift effect
+
+- ✅ **Development Tools**:
+  - Installed Chrome DevTools MCP server for live browser debugging
+  - Enables inspection of rendered pages, screenshots, console logs, network analysis
+  - Installed via: `claude mcp add chrome-devtools npx chrome-devtools-mcp@latest`
+  - Requires Claude Code restart to activate
+
+**Current Issues:**
+- ⏳ Fox logo rendering incorrectly (to be debugged with Chrome DevTools after restart)
+
+**Technical Notes:**
+- WhereIveWorked.tsx updated to use white logo versions
+- Hover animation now responds in 150ms for better UX
+- Framer Motion `whileHover` with explicit transition overrides
+- Build successful, changes ready to deploy after Fox logo fix
