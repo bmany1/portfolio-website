@@ -93,9 +93,8 @@ function ProjectCard({
       initial={{ opacity: 0, y: 50 }}
       animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
       transition={{
-        duration: 0.6,
-        delay: index * 0.1,
-        ease: "easeOut",
+        opacity: { duration: 0.6, delay: index * 0.1, ease: "easeOut" },
+        y: { duration: 0.15, ease: "easeOut" },
       }}
       whileHover={{ y: -8 }}
       className="group border border-white/10 rounded-2xl overflow-hidden hover:border-white/30 transition-all duration-300"

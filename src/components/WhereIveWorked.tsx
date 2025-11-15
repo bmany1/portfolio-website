@@ -46,11 +46,14 @@ export default function WhereIveWorked() {
                   ? { opacity: 1, scale: 1 }
                   : { opacity: 0, scale: 0.9 }
               }
-              transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
+              transition={{
+                opacity: { duration: 0.5, delay: 0.3 + index * 0.1 },
+                scale: { duration: 0.15, ease: "easeOut" },
+                y: { duration: 0.15, ease: "easeOut" }
+              }}
               whileHover={{
                 scale: 1.05,
-                y: -4,
-                transition: { duration: 0.15, ease: "easeOut" }
+                y: -4
               }}
               className="relative h-16 w-40 md:h-20 md:w-48 p-4"
             >
@@ -58,11 +61,7 @@ export default function WhereIveWorked() {
                 src={company.logo}
                 alt={company.name}
                 fill
-                className={`object-contain p-2 ${
-                  company.name === "Fox Corporation"
-                    ? "[filter:brightness(0)_invert(1)]"
-                    : ""
-                }`}
+                className="object-contain p-2"
               />
             </motion.div>
           ))}
