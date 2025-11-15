@@ -390,17 +390,33 @@ Site is polished and production-ready! Features:
   - Installed via: `claude mcp add chrome-devtools npx chrome-devtools-mcp@latest`
   - Requires Claude Code restart to activate
 
-- ✅ **Fox Logo Rendering Fix**:
-  - **Issue Identified**: Fox logo file was light gray/silver, not pure white
-  - **Diagnosis Method**: Used Chrome DevTools MCP to inspect rendered logo and verify file checksums
-  - **Root Cause**: The transparent PNG (`fox_logo_template_by_alexpasley_dft9r32.png`) had gray-colored artwork
-  - **Solution**: Applied CSS filter `brightness(0) invert(1)` to convert gray to pure white while preserving transparency
-  - **Result**: Perfect high-contrast white logos against navy background
+- ✅ **Fox Logo Rendering Fix (Multiple Iterations)**:
+  - **Initial Issue**: Fox logo file was light gray/silver, not pure white
+  - **First Attempt**: Applied CSS filter `brightness(0) invert(1)` to convert gray to white
+  - **Second Issue**: Background of logo was not transparent, showing white box
+  - **Second Attempt**: Used ChatGPT to remove background, but still had issues
+  - **Final Solution**: Created proper transparent white Fox logo in Photoshop
+  - **Result**: Perfect transparent white logo with high contrast against navy background
+  - Removed CSS filter (no longer needed with proper transparent logo)
+
+- ✅ **Hover Animation Performance Fixes**:
+  - **WhereIveWorked Component**:
+    - Fixed slow hover-out animation (was using 500ms default transition)
+    - Separated entrance animation timing from hover animation timing
+    - Set `scale` and `y` transitions to 150ms for both hover-in and hover-out
+    - Result: Snappy, responsive hover in both directions
+
+  - **Project Cards (FeaturedProjects & ProjectsGrid)**:
+    - **Issue Identified**: Card movement delayed compared to border brightening
+    - **Diagnosis**: Used Chrome DevTools MCP to inspect CSS transitions
+    - **Root Cause**: CSS `transition-all duration-300` conflicting with Framer Motion
+    - **Solution**: Reduced Framer Motion transitions from 300ms to 150ms
+    - **Result**: Card movement now synchronized with brightening effect
 
 **Technical Notes:**
-- WhereIveWorked.tsx updated to use white logo versions with conditional CSS filter for Fox logo
-- Hover animation now responds in 150ms for better UX
-- Framer Motion `whileHover` with explicit transition overrides
-- CSS filter technique: `[filter:brightness(0)_invert(1)]` converts any color to white
-- Build successful, all changes tested and verified with Chrome DevTools MCP
-- Ready to deploy to production
+- WhereIveWorked.tsx: Separated transition properties (opacity for entrance, scale/y for hover)
+- FeaturedProjects.tsx & ProjectsGrid.tsx: Fast 150ms transitions for y and scale
+- Framer Motion `whileHover` with explicit fast transitions override CSS defaults
+- Final Fox logo: `fox_logo_transparent-1.png` from Photoshop (truly transparent white)
+- All animations tested and verified with Chrome DevTools MCP
+- Build successful, deployed to production
