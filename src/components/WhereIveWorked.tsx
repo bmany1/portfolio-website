@@ -11,11 +11,11 @@ export default function WhereIveWorked() {
   const companies = [
     {
       name: "Fox Corporation",
-      logo: "/images/fox-logo.png",
+      logo: "/images/fox-logo-white.png",
     },
     {
       name: "Grayscale Investments",
-      logo: "/images/grayscale-logo.png",
+      logo: "/images/grayscale-logo-white.png",
     },
   ];
 
@@ -47,13 +47,22 @@ export default function WhereIveWorked() {
                   : { opacity: 0, scale: 0.9 }
               }
               transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-              className="relative h-16 w-40 md:h-20 md:w-48 grayscale hover:grayscale-0 transition-all duration-300 opacity-70 hover:opacity-100"
+              whileHover={{
+                scale: 1.05,
+                y: -4,
+                transition: { duration: 0.15, ease: "easeOut" }
+              }}
+              className="relative h-16 w-40 md:h-20 md:w-48 p-4"
             >
               <Image
                 src={company.logo}
                 alt={company.name}
                 fill
-                className="object-contain"
+                className={`object-contain p-2 ${
+                  company.name === "Fox Corporation"
+                    ? "[filter:brightness(0)_invert(1)]"
+                    : ""
+                }`}
               />
             </motion.div>
           ))}
