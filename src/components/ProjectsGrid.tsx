@@ -7,9 +7,17 @@ import type { Project } from "@/sanity/queries";
 
 interface ProjectsGridProps {
   projects: Project[];
+  eyebrow?: string;
+  title?: string;
+  description?: string;
 }
 
-export default function ProjectsGrid({ projects }: ProjectsGridProps) {
+export default function ProjectsGrid({
+  projects,
+  eyebrow = "PORTFOLIO",
+  title = "All Projects",
+  description = "A collection of product initiatives, redesigns, and launches spanning various industries and user needs.",
+}: ProjectsGridProps) {
   const headerRef = useRef(null);
   const isHeaderInView = useInView(headerRef, { once: true, margin: "-50px" });
 
@@ -27,15 +35,10 @@ export default function ProjectsGrid({ projects }: ProjectsGridProps) {
           className="mb-16"
         >
           <span className="text-sm font-mono text-white/40 tracking-wider">
-            PORTFOLIO
+            {eyebrow}
           </span>
-          <h1 className="text-5xl md:text-7xl font-bold mt-4 mb-6">
-            All Projects
-          </h1>
-          <p className="text-xl text-white/60 max-w-3xl">
-            A collection of product initiatives, redesigns, and launches
-            spanning various industries and user needs.
-          </p>
+          <h1 className="text-5xl md:text-7xl font-bold mt-4 mb-6">{title}</h1>
+          <p className="text-xl text-white/60 max-w-3xl">{description}</p>
         </motion.div>
 
         {/* Projects Grid */}

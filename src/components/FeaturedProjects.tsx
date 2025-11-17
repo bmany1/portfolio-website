@@ -8,9 +8,19 @@ import type { Project } from "@/sanity/queries";
 
 interface FeaturedProjectsProps {
   projects: Project[];
+  eyebrow?: string;
+  sectionTitle?: string;
+  description?: string;
+  ctaText?: string;
 }
 
-export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
+export default function FeaturedProjects({
+  projects,
+  eyebrow = "SELECTED WORK",
+  sectionTitle = "Featured Projects",
+  description,
+  ctaText = "View all projects",
+}: FeaturedProjectsProps) {
   const headerRef = useRef(null);
   const isHeaderInView = useInView(headerRef, { once: true, margin: "-100px" });
 
@@ -26,15 +36,14 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
           className="mb-16"
         >
           <span className="text-sm font-mono text-white/40 tracking-wider">
-            SELECTED WORK
+            {eyebrow}
           </span>
           <h2 className="text-4xl md:text-5xl font-bold mt-4 mb-4">
-            Featured Projects
+            {sectionTitle}
           </h2>
-          <p className="text-white/60 max-w-2xl">
-            A selection of recent projects showcasing product strategy, user
-            experience design, and technical execution.
-          </p>
+          {description && (
+            <p className="text-white/60 max-w-2xl">{description}</p>
+          )}
         </motion.div>
 
         {/* Project Grid */}
@@ -56,7 +65,7 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
             href="/projects"
             className="inline-flex items-center gap-2 text-accent hover:text-accent-hover transition-colors group font-medium"
           >
-            <span>View all projects</span>
+            <span>{ctaText}</span>
             <svg
               className="w-4 h-4 group-hover:translate-x-1 transition-transform"
               fill="none"

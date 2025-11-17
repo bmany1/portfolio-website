@@ -4,20 +4,26 @@ import { motion, useInView } from "framer-motion";
 import Image from "next/image";
 import { useRef } from "react";
 
-export default function WhereIveWorked() {
+interface Company {
+  name: string;
+  logo?: {
+    asset: {
+      url?: string;
+    };
+  };
+}
+
+interface WhereIveWorkedProps {
+  sectionTitle?: string;
+  companies: Company[];
+}
+
+export default function WhereIveWorked({
+  sectionTitle = "Where I've Worked",
+  companies,
+}: WhereIveWorkedProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-
-  const companies = [
-    {
-      name: "Fox Corporation",
-      logo: "/images/fox-logo-white.png",
-    },
-    {
-      name: "Grayscale Investments",
-      logo: "/images/grayscale-logo-white.png",
-    },
-  ];
 
   return (
     <section ref={ref} className="py-24 px-6 bg-black/20">
@@ -28,7 +34,7 @@ export default function WhereIveWorked() {
           transition={{ duration: 0.6 }}
           className="text-3xl md:text-4xl font-bold text-center mb-16"
         >
-          Where I've Worked
+          {sectionTitle}
         </motion.h2>
 
         <motion.div
@@ -57,12 +63,14 @@ export default function WhereIveWorked() {
               }}
               className="relative h-16 w-40 md:h-20 md:w-48 p-4"
             >
-              <Image
-                src={company.logo}
-                alt={company.name}
-                fill
-                className="object-contain p-2"
-              />
+              {company.logo?.asset?.url && (
+                <Image
+                  src={company.logo.asset.url}
+                  alt={company.name}
+                  fill
+                  className="object-contain p-2"
+                />
+              )}
             </motion.div>
           ))}
         </motion.div>

@@ -1,9 +1,16 @@
 import ProjectsGrid from "@/components/ProjectsGrid";
-import { getProjects, type Project } from "@/sanity/queries";
+import {
+  getProjectsPageSettings,
+  getProjects,
+  type Project,
+} from "@/sanity/queries";
 
 export default async function ProjectsPage() {
-  // Fetch all projects from Sanity
-  const sanityProjects = await getProjects();
+  // Fetch projects page settings and all projects from Sanity
+  const [pageSettings, sanityProjects] = await Promise.all([
+    getProjectsPageSettings(),
+    getProjects(),
+  ]);
 
   // Fallback placeholder projects if none exist in Sanity yet
   const placeholderProjects: Project[] = [
@@ -64,7 +71,15 @@ export default async function ProjectsPage() {
   ];
 
   // Use Sanity projects if available, otherwise use placeholders
-  const projects = sanityProjects.length > 0 ? sanityProjects : placeholderProjects;
+  const projects =
+    sanityProjects.length > 0 ? sanityProjects : placeholderProjects;
 
-  return <ProjectsGrid projects={projects} />;
+  return (
+    <ProjectsGrid
+      projects={projects}
+      eyebrow={pageSettings?.eyebrow}
+      title={pageSettings?.title}
+      description={pageSettings?.description}
+    />
+  );
 }

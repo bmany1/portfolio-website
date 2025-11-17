@@ -36,11 +36,83 @@ export interface About {
       url?: string;
     };
   };
-  email?: string;
-  linkedin?: string;
-  twitter?: string;
-  github?: string;
   skills?: string[];
+}
+
+export interface SocialLink {
+  platform: string;
+  url: string;
+  handle?: string;
+}
+
+export interface SiteSettings {
+  _id: string;
+  siteName: string;
+  siteDescription?: string;
+  email?: string;
+  socialLinks?: SocialLink[];
+}
+
+export interface Company {
+  name: string;
+  logo?: {
+    asset: {
+      _ref: string;
+      url?: string;
+    };
+  };
+}
+
+export interface WhatIDoColumn {
+  title: string;
+  description: string;
+  items: string[];
+}
+
+export interface Homepage {
+  _id: string;
+  heroSection: {
+    heading: string;
+    bio: string;
+    headshotImage?: {
+      asset: {
+        _ref: string;
+        url?: string;
+      };
+    };
+    resumeFile?: {
+      asset: {
+        _ref: string;
+        url?: string;
+      };
+    };
+    resumeLinkText?: string;
+  };
+  whereIveWorked: {
+    sectionTitle?: string;
+    companies: Company[];
+  };
+  whatIDo: {
+    columns: WhatIDoColumn[];
+  };
+  featuredWork: {
+    eyebrow?: string;
+    sectionTitle: string;
+    description?: string;
+    ctaText?: string;
+  };
+  contactCTA: {
+    heading: string;
+    subtext?: string;
+    buttonText?: string;
+  };
+}
+
+export interface ProjectsPageSettings {
+  _id: string;
+  eyebrow?: string;
+  title: string;
+  description: string;
 }
 
 // Fetch all projects, ordered by the 'order' field
@@ -101,11 +173,88 @@ export async function getAbout(): Promise<About | null> {
         url
       }
     },
-    email,
-    linkedin,
-    twitter,
-    github,
     skills
+  }`;
+
+  return client.fetch(query);
+}
+
+// Fetch site settings (should only be one document)
+export async function getSiteSettings(): Promise<SiteSettings | null> {
+  const query = `*[_type == "siteSettings"][0] {
+    _id,
+    siteName,
+    siteDescription,
+    email,
+    socialLinks
+  }`;
+
+  return client.fetch(query);
+}
+
+// Fetch homepage content (should only be one document)
+export async function getHomepage(): Promise<Homepage | null> {
+  const query = `*[_type == "homepage"][0] {
+    _id,
+    heroSection {
+      heading,
+      bio,
+      headshotImage {
+        asset-> {
+          _ref,
+          url
+        }
+      },
+      resumeFile {
+        asset-> {
+          _ref,
+          url
+        }
+      },
+      resumeLinkText
+    },
+    whereIveWorked {
+      sectionTitle,
+      companies[] {
+        name,
+        logo {
+          asset-> {
+            _ref,
+            url
+          }
+        }
+      }
+    },
+    whatIDo {
+      columns[] {
+        title,
+        description,
+        items
+      }
+    },
+    featuredWork {
+      eyebrow,
+      sectionTitle,
+      description,
+      ctaText
+    },
+    contactCTA {
+      heading,
+      subtext,
+      buttonText
+    }
+  }`;
+
+  return client.fetch(query);
+}
+
+// Fetch projects page settings (should only be one document)
+export async function getProjectsPageSettings(): Promise<ProjectsPageSettings | null> {
+  const query = `*[_type == "projectsPageSettings"][0] {
+    _id,
+    eyebrow,
+    title,
+    description
   }`;
 
   return client.fetch(query);

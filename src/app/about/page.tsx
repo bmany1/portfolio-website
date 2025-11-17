@@ -1,10 +1,13 @@
 import { PortableText } from "@portabletext/react";
 
-import { getAbout } from "@/sanity/queries";
+import { getAbout, getSiteSettings } from "@/sanity/queries";
 
 export default async function AboutPage() {
-  // Fetch about page content from Sanity
-  const aboutData = await getAbout();
+  // Fetch about page content and site settings from Sanity
+  const [aboutData, siteSettings] = await Promise.all([
+    getAbout(),
+    getSiteSettings(),
+  ]);
   return (
     <div className="min-h-screen px-6 py-16">
       <div className="max-w-5xl mx-auto">
@@ -89,44 +92,26 @@ export default async function AboutPage() {
           </p>
 
           <div className="flex flex-wrap gap-4">
-            {aboutData?.email && (
+            {siteSettings?.email && (
               <a
-                href={`mailto:${aboutData.email}`}
+                href={`mailto:${siteSettings.email}`}
                 className="px-6 py-3 bg-white text-black font-medium rounded-full hover:bg-white/90 transition-colors"
               >
                 Email Me
               </a>
             )}
-            {aboutData?.linkedin && (
-              <a
-                href={aboutData.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-6 py-3 border border-white/20 text-white font-medium rounded-full hover:border-white/40 transition-colors"
-              >
-                LinkedIn
-              </a>
-            )}
-            {aboutData?.github && (
-              <a
-                href={aboutData.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-6 py-3 border border-white/20 text-white font-medium rounded-full hover:border-white/40 transition-colors"
-              >
-                GitHub
-              </a>
-            )}
-            {aboutData?.twitter && (
-              <a
-                href={aboutData.twitter}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-6 py-3 border border-white/20 text-white font-medium rounded-full hover:border-white/40 transition-colors"
-              >
-                Twitter/X
-              </a>
-            )}
+            {siteSettings?.socialLinks &&
+              siteSettings.socialLinks.map((link, i) => (
+                <a
+                  key={i}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-6 py-3 border border-white/20 text-white font-medium rounded-full hover:border-white/40 transition-colors"
+                >
+                  {link.platform}
+                </a>
+              ))}
           </div>
         </div>
       </div>

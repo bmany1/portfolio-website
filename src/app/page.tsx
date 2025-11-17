@@ -3,11 +3,18 @@ import FeaturedProjects from "@/components/FeaturedProjects";
 import HeroSection from "@/components/HeroSection";
 import WhatIDoSection from "@/components/WhatIDoSection";
 import WhereIveWorked from "@/components/WhereIveWorked";
-import { getFeaturedProjects, type Project } from "@/sanity/queries";
+import {
+  getFeaturedProjects,
+  getHomepage,
+  type Project,
+} from "@/sanity/queries";
 
 export default async function Home() {
-  // Fetch featured projects from Sanity
-  const featuredProjects = await getFeaturedProjects();
+  // Fetch homepage content and featured projects from Sanity
+  const [homepage, featuredProjects] = await Promise.all([
+    getHomepage(),
+    getFeaturedProjects(),
+  ]);
 
   // Fallback placeholder projects if none exist in Sanity yet
   const placeholderProjects: Project[] = [
@@ -32,23 +39,64 @@ export default async function Home() {
   ];
 
   // Use Sanity projects if available, otherwise use placeholders
-  const displayProjects = featuredProjects.length > 0 ? featuredProjects : placeholderProjects;
+  const displayProjects =
+    featuredProjects.length > 0 ? featuredProjects : placeholderProjects;
+
+  // If homepage data doesn't exist yet, show a message
+  if (!homepage) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-6">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold mb-4">Welcome!</h1>
+          <p className="text-xl text-white/60 mb-6">
+            Please create your homepage content in Sanity Studio
+          </p>
+          <a
+            href="/studio"
+            className="inline-block px-8 py-4 bg-accent text-black font-medium rounded-full hover:bg-accent-hover transition-colors"
+          >
+            Go to Studio
+          </a>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <HeroSection />
+      <HeroSection
+        heading={homepage.heroSection.heading}
+        bio={homepage.heroSection.bio}
+        headshotImage={homepage.heroSection.headshotImage}
+        resumeFile={homepage.heroSection.resumeFile}
+        resumeLinkText={homepage.heroSection.resumeLinkText}
+      />
 
       {/* Where I've Worked Section */}
-      <WhereIveWorked />
+      <WhereIveWorked
+        sectionTitle={homepage.whereIveWorked.sectionTitle}
+        companies={homepage.whereIveWorked.companies}
+      />
 
       {/* What I Do Section */}
-      <WhatIDoSection />
+      <WhatIDoSection columns={homepage.whatIDo.columns} />
 
       {/* Featured Projects Section */}
-      <FeaturedProjects projects={displayProjects} />
+      <FeaturedProjects
+        projects={displayProjects}
+        eyebrow={homepage.featuredWork.eyebrow}
+        sectionTitle={homepage.featuredWork.sectionTitle}
+        description={homepage.featuredWork.description}
+        ctaText={homepage.featuredWork.ctaText}
+      />
 
       {/* Contact/CTA Section */}
-      <CTASection />
+      <CTASection
+        heading={homepage.contactCTA.heading}
+        subtext={homepage.contactCTA.subtext}
+        buttonText={homepage.contactCTA.buttonText}
+      />
     </div>
   );
 }

@@ -4,7 +4,17 @@ import { motion, useInView } from "framer-motion";
 import Link from "next/link";
 import { useRef } from "react";
 
-export default function CTASection() {
+interface CTASectionProps {
+  heading: string;
+  subtext?: string;
+  buttonText?: string;
+}
+
+export default function CTASection({
+  heading,
+  subtext,
+  buttonText = "Get in Touch",
+}: CTASectionProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
@@ -17,17 +27,18 @@ export default function CTASection() {
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="text-4xl md:text-6xl font-bold mb-6"
         >
-          Let&apos;s work together
+          {heading}
         </motion.h2>
-        <motion.p
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-          className="text-xl text-white/60 mb-8 max-w-2xl mx-auto"
-        >
-          I&apos;m always interested in hearing about new projects and
-          opportunities.
-        </motion.p>
+        {subtext && (
+          <motion.p
+            initial={{ opacity: 0, y: 30 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+            transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+            className="text-xl text-white/60 mb-8 max-w-2xl mx-auto"
+          >
+            {subtext}
+          </motion.p>
+        )}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
@@ -37,7 +48,7 @@ export default function CTASection() {
             href="/about"
             className="inline-block px-8 py-4 bg-white text-black font-medium rounded-full hover:bg-white/90 hover:scale-105 transition-all duration-300"
           >
-            Get in Touch
+            {buttonText}
           </Link>
         </motion.div>
       </div>
