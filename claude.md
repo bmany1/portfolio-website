@@ -420,3 +420,108 @@ Site is polished and production-ready! Features:
 - Final Fox logo: `fox_logo_transparent-1.png` from Photoshop (truly transparent white)
 - All animations tested and verified with Chrome DevTools MCP
 - Build successful, deployed to production
+
+### Session 5: Comprehensive CMS Content Management (2025-11-17)
+**Completed:**
+- ✅ **SETUP.md Created**: Added setup instructions for working on project from multiple computers
+- ✅ **Comprehensive CMS Schema Implementation**:
+  - Made ALL website content editable through Sanity CMS (no hardcoded copy)
+  - Resume PDF hosting in Sanity (no external hosting needed)
+  - Flexible company logos (add/remove/reorder up to 6)
+  - Social links in global settings (reusable across site)
+
+- ✅ **New Sanity Schemas**:
+  - **homepage.ts** (singleton):
+    - Hero Section: heading, bio, headshot image, resume PDF file, resume link text
+    - Where I've Worked: section title, companies array (up to 6, orderable)
+    - What I Do: 3 columns (title, description, items array) - fully customizable
+    - Featured Work: eyebrow, section title, description, CTA text
+    - Contact CTA: heading, subtext, button text
+    - All fields include `initialValue` with current hardcoded content
+
+  - **siteSettings.ts** (singleton):
+    - Site name, description (for SEO)
+    - Primary contact email
+    - Social links array: platform, URL, optional handle
+
+  - **projectsPageSettings.ts** (singleton):
+    - Eyebrow text, title, description for projects page header
+
+- ✅ **Schema Modifications**:
+  - **about.ts**: Removed email and social link fields (moved to siteSettings for global access)
+
+- ✅ **Component Updates** (All now accept CMS data as props):
+  - **HeroSection.tsx**: heading, bio, headshotImage, resumeFile, resumeLinkText
+  - **WhereIveWorked.tsx**: sectionTitle, companies array with logos
+  - **WhatIDoSection.tsx**: columns array (3 flexible columns)
+  - **FeaturedProjects.tsx**: eyebrow, sectionTitle, description, ctaText
+  - **CTASection.tsx**: heading, subtext, buttonText
+  - **ProjectsGrid.tsx**: eyebrow, title, description
+
+- ✅ **Page Updates** (All fetch and pass CMS data):
+  - **app/page.tsx**: Fetches homepage data, passes to all sections
+  - **app/projects/page.tsx**: Fetches projects page settings
+  - **app/about/page.tsx**: Fetches social links from siteSettings (not about schema)
+
+- ✅ **New GROQ Queries** (queries.ts):
+  - `getHomepage()`: Fetches all homepage content sections
+  - `getSiteSettings()`: Fetches global site settings
+  - `getProjectsPageSettings()`: Fetches projects page header
+  - Updated `getAbout()`: Removed social link fields
+  - Added comprehensive TypeScript interfaces for all new content types
+
+- ✅ **Next.js Configuration**:
+  - **next.config.ts**: Added `cdn.sanity.io` to allowed image domains
+  - Required for Next.js Image component to display Sanity-hosted images
+
+- ✅ **Build & Deployment**:
+  - Build tested successfully - all pages rendering correctly
+  - All changes committed and pushed to GitHub
+  - Auto-deployment to Vercel production
+
+**Technical Implementation Notes:**
+- All schemas use `initialValue` to pre-populate with current hardcoded content
+- Schema includes helpful descriptions and recommendations (e.g., "Keep under 20 chars")
+- Resume file field accepts PDF uploads - Sanity provides hosted URL automatically
+- Companies array limited to 6 items with drag-to-reorder functionality
+- What I Do columns validated to exactly 3 (matches current design)
+- Fallback messages if CMS content doesn't exist yet (guides user to Studio)
+- Social links now globally accessible from siteSettings (used on About page)
+
+**Content Population Workflow:**
+1. Visit http://localhost:3000/studio
+2. Create "Homepage" document (pre-filled with current content) → Publish
+3. Create "Site Settings" document → Add email/social links → Publish
+4. Create "Projects Page Settings" document (pre-filled) → Publish
+5. Upload company logos to "Where I've Worked" section
+6. Upload resume PDF to Hero section
+7. All content now editable without code changes!
+
+**Benefits Achieved:**
+✅ Zero hardcoded content - everything managed in Sanity CMS
+✅ Non-technical content updates (no code changes needed)
+✅ Resume PDF hosting handled by Sanity
+✅ Company logos flexible (add/remove/reorder)
+✅ "What I Do" columns completely customizable
+✅ Social links defined once, used everywhere
+✅ Projects page header fully editable
+✅ Built-in content recommendations in CMS
+✅ Type-safe with comprehensive TypeScript interfaces
+
+**Files Changed:**
+- Created: `src/sanity/schemas/homepage.ts`
+- Created: `src/sanity/schemas/siteSettings.ts`
+- Created: `src/sanity/schemas/projectsPageSettings.ts`
+- Created: `SETUP.md`
+- Modified: `src/sanity/schemas/about.ts` (removed social fields)
+- Modified: `src/sanity/schemas/index.ts` (export new schemas)
+- Modified: `src/sanity/queries.ts` (added 3 new queries + types)
+- Modified: All homepage components (HeroSection, WhereIveWorked, WhatIDoSection, FeaturedProjects, CTASection)
+- Modified: `src/components/ProjectsGrid.tsx`
+- Modified: `src/app/page.tsx`, `src/app/projects/page.tsx`, `src/app/about/page.tsx`
+- Modified: `next.config.ts` (Sanity CDN image configuration)
+
+**Commits:**
+- `2a71592` - Add SETUP.md with instructions for new computer setup
+- `42af36c` - Add comprehensive CMS schema for all website content
+- `7fbd036` - Configure Next.js to allow Sanity CDN images
