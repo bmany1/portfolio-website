@@ -1,4 +1,5 @@
 import about from "./about";
+import contactPageSettings from "./contactPageSettings";
 import homepage from "./homepage";
 import project from "./project";
 import projectsPageSettings from "./projectsPageSettings";
@@ -10,4 +11,5 @@ export const schemaTypes = [
   homepage,
   siteSettings,
   projectsPageSettings,
+  contactPageSettings,
 ];

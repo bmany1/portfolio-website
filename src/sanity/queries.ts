@@ -113,6 +113,18 @@ export interface ProjectsPageSettings {
   eyebrow?: string;
   title: string;
   description: string;
+  footerCTA?: {
+    text?: string;
+    linkText?: string;
+  };
+}
+
+export interface ContactPageSettings {
+  _id: string;
+  eyebrow?: string;
+  heading: string;
+  description?: string;
+  formspreeId?: string;
 }
 
 // Fetch all projects, ordered by the 'order' field
@@ -254,7 +266,24 @@ export async function getProjectsPageSettings(): Promise<ProjectsPageSettings | 
     _id,
     eyebrow,
     title,
-    description
+    description,
+    footerCTA {
+      text,
+      linkText
+    }
+  }`;
+
+  return client.fetch(query);
+}
+
+// Fetch contact page settings (should only be one document)
+export async function getContactPageSettings(): Promise<ContactPageSettings | null> {
+  const query = `*[_type == "contactPageSettings"][0] {
+    _id,
+    eyebrow,
+    heading,
+    description,
+    formspreeId
   }`;
 
   return client.fetch(query);

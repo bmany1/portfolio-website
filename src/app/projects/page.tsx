@@ -1,3 +1,4 @@
+import FooterCTA from "@/components/FooterCTA";
 import ProjectsGrid from "@/components/ProjectsGrid";
 import {
   getProjectsPageSettings,
@@ -75,11 +76,17 @@ export default async function ProjectsPage() {
     sanityProjects.length > 0 ? sanityProjects : placeholderProjects;
 
   return (
-    <ProjectsGrid
-      projects={projects}
-      eyebrow={pageSettings?.eyebrow}
-      title={pageSettings?.title}
-      description={pageSettings?.description}
-    />
+    <>
+      <ProjectsGrid
+        projects={projects}
+        eyebrow={pageSettings?.eyebrow}
+        title={pageSettings?.title}
+        description={pageSettings?.description}
+      />
+      <FooterCTA
+        text={pageSettings?.footerCTA?.text}
+        linkText={pageSettings?.footerCTA?.linkText}
+      />
+    </>
   );
 }

@@ -167,15 +167,19 @@ portfolio-website/
 │   │   └── studio/
 │   │       └── [[...tool]]/
 │   │           └── page.tsx      # Embedded Sanity Studio
+│   │   ├── contact/
+│   │   │   └── page.tsx          # Contact page with form
 │   ├── components/
 │   │   ├── Navigation.tsx        # Animated nav with active states
 │   │   ├── HeroSection.tsx       # Hero with headshot and resume link
 │   │   ├── WhereIveWorked.tsx    # Company logos section
 │   │   ├── WhatIDoSection.tsx    # Three-column value proposition
 │   │   ├── FeaturedProjects.tsx  # Scroll-reveal project cards
-│   │   ├── CTASection.tsx        # Animated CTA section
+│   │   ├── CTASection.tsx        # Animated CTA section (links to /contact)
 │   │   ├── ProjectsGrid.tsx      # Animated projects grid
-│   │   └── PageTransition.tsx    # Page transition component
+│   │   ├── PageTransition.tsx    # Page transition component
+│   │   ├── ContactForm.tsx       # Contact form with Formspree
+│   │   └── FooterCTA.tsx         # Lightweight footer CTA
 │   ├── sanity/
 │   │   ├── schemas/
 │   │   │   ├── project.ts        # Project content type
@@ -263,9 +267,9 @@ npm run lint         # Run ESLint
 
 ## Questions/Decisions Made
 - [x] **Sanity Studio**: Embedded in Next.js app at `/studio` route (simpler deployment)
+- [x] **Contact form**: Formspree integration with email fallback (hybrid approach)
 - [ ] Project detail pages: Dynamic routes or static pages?
 - [ ] Analytics: Google Analytics, Vercel Analytics, or none?
-- [ ] Contact form: Simple email link, form with backend, or third-party service?
 
 ## Session Progress (2025-11-10)
 
@@ -525,3 +529,84 @@ Site is polished and production-ready! Features:
 - `2a71592` - Add SETUP.md with instructions for new computer setup
 - `42af36c` - Add comprehensive CMS schema for all website content
 - `7fbd036` - Configure Next.js to allow Sanity CDN images
+
+### Session 6: Contact Page & Footer CTA (2025-11-19)
+**Completed:**
+- ✅ **Contact Page with Formspree Integration**:
+  - Created `/contact` page with form for user inquiries
+  - Integrated with Formspree (free tier: 50 submissions/month)
+  - Form fields: Name, Email, Message
+  - Form states: Idle, Submitting, Success, Error
+  - Email fallback with click-to-copy functionality
+  - Reduced top padding for better visual balance
+
+- ✅ **New Components Created**:
+  - **ContactForm.tsx**: Client component with form state management
+    - Handles Formspree submission
+    - Success state with checkmark animation
+    - Error handling with user feedback
+    - Email fallback section with copy-to-clipboard
+  - **FooterCTA.tsx**: Lightweight CTA for page bottoms
+    - Minimal design with border separator
+    - Text + accent-colored link with arrow icon
+    - Hover animation on arrow (slides right)
+    - Scroll-triggered fade-in animation
+
+- ✅ **New Sanity Schema**:
+  - **contactPageSettings.ts** (singleton):
+    - Eyebrow text
+    - Page heading
+    - Description
+    - Formspree Form ID (required for form to work)
+    - All fields include `initialValue` with defaults
+
+- ✅ **Schema Modifications**:
+  - **projectsPageSettings.ts**: Added footerCTA object with text and linkText fields
+
+- ✅ **Navigation Updates**:
+  - Added "Contact" link as rightmost item in navigation
+  - Contact page now accessible from main nav alongside Projects and About
+
+- ✅ **CTASection Updates**:
+  - Changed button link from `/about` to `/contact`
+  - Homepage CTA now directs users to contact form
+
+- ✅ **Projects Page Updates**:
+  - Added FooterCTA at bottom of page
+  - Footer CTA text configurable via Sanity (Projects Page Settings)
+
+- ✅ **New GROQ Query**:
+  - `getContactPageSettings()`: Fetches contact page content
+  - Updated `getProjectsPageSettings()`: Now includes footerCTA fields
+  - Added `ContactPageSettings` TypeScript interface
+
+**Technical Implementation Notes:**
+- ContactForm uses React useState for form state management
+- Formspree integration via fetch API with JSON body
+- FooterCTA accepts props with sensible defaults (works without CMS data)
+- Contact page fetches both siteSettings (for email) and contactPageSettings
+- Projects page passes footerCTA data from CMS to FooterCTA component
+
+**Setup Requirements:**
+1. Create Formspree account at formspree.io
+2. Create a new form and copy the Form ID
+3. In Sanity Studio, create "Contact Page Settings" document
+4. Paste Formspree Form ID into the designated field
+5. Publish document
+
+**Files Created:**
+- `src/app/contact/page.tsx`
+- `src/components/ContactForm.tsx`
+- `src/components/FooterCTA.tsx`
+- `src/sanity/schemas/contactPageSettings.ts`
+
+**Files Modified:**
+- `src/components/Navigation.tsx` (added Contact link)
+- `src/components/CTASection.tsx` (changed link to /contact)
+- `src/app/projects/page.tsx` (added FooterCTA)
+- `src/sanity/schemas/projectsPageSettings.ts` (added footerCTA fields)
+- `src/sanity/schemas/index.ts` (export contactPageSettings)
+- `src/sanity/queries.ts` (added getContactPageSettings, updated interfaces)
+
+**Build Status**: ✅ Successful
+**New Routes**: `/contact`

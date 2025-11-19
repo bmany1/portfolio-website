@@ -45,7 +45,7 @@ export default function CTASection({
           transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
         >
           <Link
-            href="/about"
+            href="/contact"
             className="inline-block px-8 py-4 bg-white text-black font-medium rounded-full hover:bg-white/90 hover:scale-105 transition-all duration-300"
           >
             {buttonText}
