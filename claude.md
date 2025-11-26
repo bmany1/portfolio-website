@@ -111,12 +111,16 @@ Reference sites analyzed for design patterns:
   - [x] Skills/tools (connected to Sanity)
   - [x] Contact info with social links (connected to Sanity)
   - [x] Profile image support
-- [ ] Individual project detail pages (not yet implemented)
-- [ ] Footer component
+- [x] Individual project detail pages (completed 2025-11-25)
+  - [x] Dynamic routes at `/projects/[slug]`
+  - [x] Rich content with images and videos
+  - [x] Previous/Next navigation
+  - [x] CTA buttons for live site and GitHub
+- [x] Footer component (FooterCTA - lightweight version)
 - [x] Responsive design for all pages
 
-**Status**: Completed 2025-11-10
-**Commit**: `44d7330`
+**Status**: Completed 2025-11-10 (updated 2025-11-25)
+**Commit**: `44d7330` (initial), various commits for detail pages
 
 ### Phase 4: Animations & Polish ✅ COMPLETED
 - [x] Smooth page transitions (Framer Motion)
@@ -161,33 +165,41 @@ portfolio-website/
 │   │   ├── layout.tsx            # Root layout with Navigation
 │   │   ├── globals.css           # Global styles, dark theme
 │   │   ├── projects/
-│   │   │   └── page.tsx          # Projects listing page
+│   │   │   ├── page.tsx          # Projects listing page
+│   │   │   └── [slug]/
+│   │   │       └── page.tsx      # Project detail pages (dynamic route)
 │   │   ├── about/
 │   │   │   └── page.tsx          # About page
+│   │   ├── contact/
+│   │   │   └── page.tsx          # Contact page with form
 │   │   └── studio/
 │   │       └── [[...tool]]/
 │   │           └── page.tsx      # Embedded Sanity Studio
-│   │   ├── contact/
-│   │   │   └── page.tsx          # Contact page with form
 │   ├── components/
 │   │   ├── Navigation.tsx        # Animated nav with active states
 │   │   ├── HeroSection.tsx       # Hero with headshot and resume link
 │   │   ├── WhereIveWorked.tsx    # Company logos section
 │   │   ├── WhatIDoSection.tsx    # Three-column value proposition
-│   │   ├── FeaturedProjects.tsx  # Scroll-reveal project cards
+│   │   ├── FeaturedProjects.tsx  # Scroll-reveal project cards (clickable)
 │   │   ├── CTASection.tsx        # Animated CTA section (links to /contact)
-│   │   ├── ProjectsGrid.tsx      # Animated projects grid
+│   │   ├── ProjectsGrid.tsx      # Animated projects grid (clickable)
+│   │   ├── ProjectDetailContent.tsx  # Project detail page layout with animations
 │   │   ├── PageTransition.tsx    # Page transition component
 │   │   ├── ContactForm.tsx       # Contact form with Formspree
 │   │   └── FooterCTA.tsx         # Lightweight footer CTA
 │   ├── sanity/
 │   │   ├── schemas/
-│   │   │   ├── project.ts        # Project content type
+│   │   │   ├── project.ts        # Project content type (with cardImage, video support)
 │   │   │   ├── about.ts          # About content type
+│   │   │   ├── homepage.ts       # Homepage content singleton
+│   │   │   ├── siteSettings.ts   # Global site settings
+│   │   │   ├── projectsPageSettings.ts  # Projects page settings
+│   │   │   ├── contactPageSettings.ts   # Contact page settings
 │   │   │   └── index.ts          # Schema exports
 │   │   ├── client.ts             # Sanity client config
 │   │   └── queries.ts            # GROQ queries & TypeScript types
-│   └── lib/                      # Utilities (empty, ready for use)
+│   └── lib/
+│       └── sanity-image.ts       # Image optimization utilities
 ├── public/
 │   └── images/                   # Static assets
 │       ├── headshot.png          # Professional headshot
@@ -241,13 +253,20 @@ npm run lint         # Run ESLint
 ```
 
 ## Next Steps
-1. **Expand CMS schemas** to make all content editable (hero text, company logos, what I do section, resume link)
-2. Add real content through Sanity Studio
-3. Optional enhancements:
-   - Individual project detail pages
-   - Footer component
+1. Add real content through Sanity Studio
+   - Upload actual project images and details
+   - Add project case studies with rich content
+   - Upload company logos
+   - Add professional headshot and resume
+2. Optional enhancements:
    - About page animations
    - Mouse tracking grid effect
+   - SEO meta tags for all pages
+   - Analytics integration (Vercel Analytics recommended)
+3. Domain transfer:
+   - Transfer bryanmany.com from Squarespace to Vercel
+   - Configure DNS settings
+   - Set up production environment
 
 ## Notes & Learnings
 - Project uses Next.js 16.0.1 with Turbopack enabled
@@ -264,12 +283,25 @@ npm run lint         # Run ESLint
   - Chrome DevTools MCP server installed for browser debugging
   - Enables Claude Code to inspect live pages, take screenshots, analyze console/network
   - Installed via: `claude mcp add chrome-devtools npx chrome-devtools-mcp@latest`
+- **Image Optimization**:
+  - Sanity's image CDN handles optimization at request time (not upload time)
+  - All existing images automatically benefit from optimization retroactively
+  - WebP format for modern browsers, JPEG fallback for older browsers
+  - Typical file size reduction: 60-80%
+  - URL builder adds parameters like `?w=1600&q=85&auto=format`
+- **Rich Text (PortableText)**:
+  - Supports images, videos, and custom blocks
+  - Custom renderers for proper styling of headings (H1, H2, H3)
+  - Video blocks include poster images and captions
+  - Alt text support for accessibility
 
 ## Questions/Decisions Made
 - [x] **Sanity Studio**: Embedded in Next.js app at `/studio` route (simpler deployment)
 - [x] **Contact form**: Formspree integration with email fallback (hybrid approach)
-- [ ] Project detail pages: Dynamic routes or static pages?
-- [ ] Analytics: Google Analytics, Vercel Analytics, or none?
+- [x] **Project detail pages**: Dynamic routes with SSG (static generation at build time)
+- [x] **Image optimization**: Sanity CDN with automatic WebP conversion and compression
+- [x] **Video hosting**: Direct upload to Sanity with CDN delivery (no YouTube/Vimeo)
+- [ ] Analytics: Google Analytics, Vercel Analytics, or none? (pending)
 
 ## Session Progress (2025-11-10)
 
@@ -610,3 +642,126 @@ Site is polished and production-ready! Features:
 
 **Build Status**: ✅ Successful
 **New Routes**: `/contact`
+
+### Session 7: Project Detail Pages & Media Optimization (2025-11-25)
+**Completed:**
+- ✅ **Project Detail Pages (Dynamic Routes)**:
+  - Created dynamic route at `/projects/[slug]`
+  - Individual pages for each project with full content
+  - SEO metadata generation per project
+  - Static generation (SSG) for all projects at build time
+
+- ✅ **Project Detail Page Layout**:
+  - Back to Projects navigation link
+  - Hero image (full-width, optimized)
+  - Title, description, tech stack tags
+  - Prominent CTA buttons (View Live Site, View Code)
+  - Rich text content with PortableText
+  - Previous/Next project navigation at bottom
+  - Smooth entrance animations throughout
+
+- ✅ **Clickable Project Cards**:
+  - FeaturedProjects component: cards now link to detail pages
+  - ProjectsGrid component: cards now link to detail pages
+  - Consistent hover states and cursor feedback
+
+- ✅ **Separate Card & Hero Images**:
+  - Added `cardImage` field to project schema (16:10 aspect ratio)
+  - Renamed `mainImage` to "Hero Image" for clarity
+  - Dimension guidance in Sanity Studio:
+    - Card Image: "Image shown on project cards (16:10 aspect ratio). Optimal size: 1600x1000px or 800x500px"
+    - Hero Image: "Large masthead image on project detail page. Optimal size: 1920x1080px"
+  - Fallback: cards use hero image if card image not provided
+
+- ✅ **Image Optimization (Sanity CDN)**:
+  - Installed `@sanity/image-url` package
+  - Created image optimization utility (`src/lib/sanity-image.ts`)
+  - Automatic format conversion (WebP for modern browsers)
+  - Automatic compression (typically 60-80% smaller)
+  - Responsive sizing per use case
+  - Functions created:
+    - `getCardImageUrl()`: 1600px width, 85% quality, 16:10 ratio
+    - `getHeroImageUrl()`: 1920px width, 90% quality, 16:9 ratio
+    - `getOptimizedImageUrl()`: Flexible sizing and quality
+  - Updated all components to use optimized images
+  - Retroactive optimization: existing images automatically optimized at delivery
+
+- ✅ **Video Upload Functionality**:
+  - Added video block type to PortableText content
+  - Video file upload (MP4, WebM, MOV support)
+  - Optional poster image (thumbnail before playback)
+  - Optional caption below video
+  - HTML5 video player with native controls
+  - Poster images optimized via Sanity CDN
+  - Videos hosted directly in Sanity with CDN delivery
+
+- ✅ **PortableText Enhancements**:
+  - Fixed missing H1 styling (was rendering as plain text)
+  - Added alt text field for images (SEO & accessibility)
+  - Complete heading hierarchy:
+    - H1: 3xl (30px), bold, 48px top margin
+    - H2: 2xl (24px), bold, 32px top margin
+    - H3: xl (20px), semibold, 24px top margin
+  - Video rendering with poster and captions
+  - Image rendering with optimized URLs
+
+- ✅ **New GROQ Queries**:
+  - `getProjectBySlug()`: Fetch single project with full content
+  - `getProjectNavigation()`: Get previous/next projects for navigation
+  - `getAllProjectSlugs()`: For static generation at build time
+
+**New Components Created:**
+- `src/app/projects/[slug]/page.tsx` - Dynamic route page
+- `src/components/ProjectDetailContent.tsx` - Project detail layout with animations
+- `src/lib/sanity-image.ts` - Image optimization utilities
+
+**Schema Modifications:**
+- `src/sanity/schemas/project.ts`:
+  - Added `cardImage` field with dimension guidance
+  - Renamed `mainImage` to "Hero Image"
+  - Added video block type to content array
+  - Added alt text field to image blocks
+  - Updated preview to show cardImage
+
+**Files Modified:**
+- `src/sanity/queries.ts`:
+  - Added `ProjectDetail` interface
+  - Added `ProjectNavigation` interface
+  - Updated all project queries to include `cardImage`
+  - Added three new query functions
+- `src/components/FeaturedProjects.tsx`:
+  - Wrapped cards in Link components
+  - Updated to use optimized card images
+- `src/components/ProjectsGrid.tsx`:
+  - Wrapped cards in Link components
+  - Updated to use optimized card images
+- `src/components/ProjectDetailContent.tsx`:
+  - Added H1 block styling
+  - Added video block rendering
+  - Updated image rendering with optimization
+
+**Technical Implementation Notes:**
+- Image optimization happens at request time (CDN), not upload time
+- All existing images automatically benefit from optimization
+- Original files preserved in Sanity, optimization via URL parameters
+- Video player uses `preload="metadata"` to save bandwidth
+- Static generation creates individual HTML pages for each project
+- TypeScript interfaces ensure type safety across all queries
+
+**Performance Benefits:**
+- Images typically 60-80% smaller file size
+- WebP format for modern browsers, JPEG fallback
+- Proper image dimensions per use case (cards vs heroes)
+- CDN edge caching for fast global delivery
+- Videos streamable from Sanity CDN
+
+**Content Management Workflow:**
+1. Create project in Sanity Studio
+2. Upload card image (16:10) and hero image (16:9)
+3. Add rich text content with images and videos
+4. Publish project
+5. Build automatically generates static page at `/projects/{slug}`
+
+**Build Status**: ✅ Successful
+**New Routes**: `/projects/[slug]` (dynamic, SSG)
+**Example**: `/projects/grayscale-migration`

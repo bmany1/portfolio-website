@@ -6,6 +6,12 @@ export interface Project {
   title: string;
   slug: { current: string };
   description: string;
+  cardImage?: {
+    asset: {
+      _ref: string;
+      url?: string;
+    };
+  };
   mainImage?: {
     asset: {
       _ref: string;
@@ -24,6 +30,17 @@ export interface PortableTextBlock {
   _key: string;
   _type: string;
   [key: string]: unknown;
+}
+
+// Extended project type with full content for detail pages
+export interface ProjectDetail extends Project {
+  content?: PortableTextBlock[];
+}
+
+// Navigation links for prev/next projects
+export interface ProjectNavigation {
+  previous?: { title: string; slug: { current: string } };
+  next?: { title: string; slug: { current: string } };
 }
 
 export interface About {
@@ -134,6 +151,12 @@ export async function getProjects(): Promise<Project[]> {
     title,
     slug,
     description,
+    cardImage {
+      asset-> {
+        _ref,
+        url
+      }
+    },
     mainImage {
       asset-> {
         _ref,
@@ -157,6 +180,12 @@ export async function getFeaturedProjects(): Promise<Project[]> {
     title,
     slug,
     description,
+    cardImage {
+      asset-> {
+        _ref,
+        url
+      }
+    },
     mainImage {
       asset-> {
         _ref,
@@ -284,6 +313,71 @@ export async function getContactPageSettings(): Promise<ContactPageSettings | nu
     heading,
     description,
     formspreeId
+  }`;
+
+  return client.fetch(query);
+}
+
+// Fetch a single project by slug with full content
+export async function getProjectBySlug(
+  slug: string
+): Promise<ProjectDetail | null> {
+  const query = `*[_type == "project" && slug.current == $slug][0] {
+    _id,
+    title,
+    slug,
+    description,
+    cardImage {
+      asset-> {
+        _ref,
+        url
+      }
+    },
+    mainImage {
+      asset-> {
+        _ref,
+        url
+      }
+    },
+    featured,
+    technologies,
+    projectUrl,
+    githubUrl,
+    content,
+    order
+  }`;
+
+  return client.fetch(query, { slug });
+}
+
+// Fetch previous and next projects for navigation
+export async function getProjectNavigation(
+  currentOrder: number
+): Promise<ProjectNavigation> {
+  // Get previous project (lower order number)
+  const prevQuery = `*[_type == "project" && order < $currentOrder] | order(order desc)[0] {
+    title,
+    slug
+  }`;
+
+  // Get next project (higher order number)
+  const nextQuery = `*[_type == "project" && order > $currentOrder] | order(order asc)[0] {
+    title,
+    slug
+  }`;
+
+  const [previous, next] = await Promise.all([
+    client.fetch(prevQuery, { currentOrder }),
+    client.fetch(nextQuery, { currentOrder }),
+  ]);
+
+  return { previous, next };
+}
+
+// Fetch all project slugs for static generation
+export async function getAllProjectSlugs(): Promise<{ slug: { current: string } }[]> {
+  const query = `*[_type == "project"] {
+    slug
   }`;
 
   return client.fetch(query);

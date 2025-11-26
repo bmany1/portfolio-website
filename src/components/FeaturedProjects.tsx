@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRef } from "react";
 
 import type { Project } from "@/sanity/queries";
+import { getCardImageUrl } from "@/lib/sanity-image";
 
 interface FeaturedProjectsProps {
   projects: Project[];
@@ -97,28 +98,29 @@ function ProjectCard({
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 50 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-      transition={{
-        opacity: { duration: 0.6, delay: index * 0.1, ease: "easeOut" },
-        y: { duration: 0.15, ease: "easeOut" },
-      }}
-      whileHover={{ y: -8 }}
-      className="group border border-white/10 rounded-2xl overflow-hidden hover:border-white/30 transition-all duration-300"
-    >
+    <Link href={`/projects/${project.slug.current}`}>
+      <motion.div
+        ref={ref}
+        initial={{ opacity: 0, y: 50 }}
+        animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+        transition={{
+          opacity: { duration: 0.6, delay: index * 0.1, ease: "easeOut" },
+          y: { duration: 0.15, ease: "easeOut" },
+        }}
+        whileHover={{ y: -8 }}
+        className="group border border-white/10 rounded-2xl overflow-hidden hover:border-white/30 transition-all duration-300 cursor-pointer"
+      >
       {/* Project Image */}
       <div className="aspect-[16/10] bg-gradient-to-br from-white/5 to-white/[0.02] relative overflow-hidden">
-        {project.mainImage?.asset?.url ? (
+        {(project.cardImage || project.mainImage) && (
           <motion.img
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
-            src={project.mainImage.asset.url}
+            src={getCardImageUrl((project.cardImage || project.mainImage)!, 1600)}
             alt={project.title}
             className="w-full h-full object-cover"
           />
-        ) : null}
+        )}
         <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
 
@@ -153,6 +155,7 @@ function ProjectCard({
           </div>
         )}
       </div>
-    </motion.div>
+      </motion.div>
+    </Link>
   );
 }
