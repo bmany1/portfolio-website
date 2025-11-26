@@ -765,3 +765,31 @@ Site is polished and production-ready! Features:
 **Build Status**: ✅ Successful
 **New Routes**: `/projects/[slug]` (dynamic, SSG)
 **Example**: `/projects/grayscale-migration`
+
+### Session 8: WhatIDoSection Bullet Point Alignment Fix (2025-11-26)
+**Completed:**
+- ✅ **Bullet Point Vertical Alignment Fix**:
+  - Identified issue: bullets were aligning with bottom of text instead of center
+  - Used Chrome DevTools MCP to inspect rendered CSS and diagnose root cause
+  - Used frontend-design skill to analyze alignment problem
+  - Issue: `items-start` with `mt-1.5` (6px) was pushing bullets too low
+  - Solution: `leading-none mt-[3px]` for perfect optical centering
+
+**Technical Analysis:**
+- **Original Problem**: `mt-1.5` (6px top margin) aligned bullets with text baseline
+- **Why items-start?**: Keeps bullets at top of first line for multi-line text (maintains flexibility)
+- **Why not items-center?**: Would center bullets vertically across all lines in multi-line scenarios (undesirable)
+- **Final Solution**:
+  - `leading-none`: Collapses bullet's line-height box
+  - `mt-[3px]`: Precise top margin for optical centering with text cap-height
+  - Works perfectly for single-line items while maintaining multi-line flexibility
+
+**Files Modified:**
+- `src/components/WhatIDoSection.tsx`: Changed bullet span from `text-accent mt-1.5 flex-shrink-0` to `text-accent flex-shrink-0 leading-none mt-[3px]`
+
+**Design Decisions:**
+- Kept `items-start` layout for future-proofing (supports multi-line bullet items)
+- Used precise pixel margin (`mt-[3px]`) instead of Tailwind's `mt-1` (4px) for better optical alignment
+- Prioritized visual centering over strict mathematical centering
+
+**Result**: Bullets now perfectly aligned with text across all three columns (What I Do, What I Use, What You Can Expect)

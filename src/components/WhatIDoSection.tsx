@@ -49,7 +49,7 @@ export default function WhatIDoSection({ columns }: WhatIDoSectionProps) {
                     }}
                     className="flex items-start gap-3"
                   >
-                    <span className="text-accent mt-1.5 flex-shrink-0">•</span>
+                    <span className="text-accent flex-shrink-0 leading-none mt-[3px]">•</span>
                     <span className="text-foreground/80 font-medium">
                       {item}
                     </span>
