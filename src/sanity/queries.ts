@@ -170,7 +170,12 @@ export async function getProjects(): Promise<Project[]> {
     order
   }`;
 
-  return client.fetch(query);
+  try {
+    return await client.fetch(query);
+  } catch (error) {
+    console.error('[Sanity] Failed to fetch projects:', error);
+    return [];
+  }
 }
 
 // Fetch only featured projects
@@ -199,7 +204,12 @@ export async function getFeaturedProjects(): Promise<Project[]> {
     order
   }`;
 
-  return client.fetch(query);
+  try {
+    return await client.fetch(query);
+  } catch (error) {
+    console.error('[Sanity] Failed to fetch featured projects:', error);
+    return [];
+  }
 }
 
 // Fetch the about page content (should only be one document)
@@ -217,7 +227,12 @@ export async function getAbout(): Promise<About | null> {
     skills
   }`;
 
-  return client.fetch(query);
+  try {
+    return await client.fetch(query);
+  } catch (error) {
+    console.error('[Sanity] Failed to fetch about content:', error);
+    return null;
+  }
 }
 
 // Fetch site settings (should only be one document)
@@ -230,7 +245,12 @@ export async function getSiteSettings(): Promise<SiteSettings | null> {
     socialLinks
   }`;
 
-  return client.fetch(query);
+  try {
+    return await client.fetch(query);
+  } catch (error) {
+    console.error('[Sanity] Failed to fetch site settings:', error);
+    return null;
+  }
 }
 
 // Fetch homepage content (should only be one document)
@@ -286,7 +306,12 @@ export async function getHomepage(): Promise<Homepage | null> {
     }
   }`;
 
-  return client.fetch(query);
+  try {
+    return await client.fetch(query);
+  } catch (error) {
+    console.error('[Sanity] Failed to fetch homepage content:', error);
+    return null;
+  }
 }
 
 // Fetch projects page settings (should only be one document)
@@ -302,7 +327,12 @@ export async function getProjectsPageSettings(): Promise<ProjectsPageSettings | 
     }
   }`;
 
-  return client.fetch(query);
+  try {
+    return await client.fetch(query);
+  } catch (error) {
+    console.error('[Sanity] Failed to fetch projects page settings:', error);
+    return null;
+  }
 }
 
 // Fetch contact page settings (should only be one document)
@@ -315,7 +345,12 @@ export async function getContactPageSettings(): Promise<ContactPageSettings | nu
     formspreeId
   }`;
 
-  return client.fetch(query);
+  try {
+    return await client.fetch(query);
+  } catch (error) {
+    console.error('[Sanity] Failed to fetch contact page settings:', error);
+    return null;
+  }
 }
 
 // Fetch a single project by slug with full content
@@ -347,7 +382,12 @@ export async function getProjectBySlug(
     order
   }`;
 
-  return client.fetch(query, { slug });
+  try {
+    return await client.fetch(query, { slug });
+  } catch (error) {
+    console.error(`[Sanity] Failed to fetch project with slug "${slug}":`, error);
+    return null;
+  }
 }
 
 // Fetch previous and next projects for navigation
@@ -366,12 +406,17 @@ export async function getProjectNavigation(
     slug
   }`;
 
-  const [previous, next] = await Promise.all([
-    client.fetch(prevQuery, { currentOrder }),
-    client.fetch(nextQuery, { currentOrder }),
-  ]);
+  try {
+    const [previous, next] = await Promise.all([
+      client.fetch(prevQuery, { currentOrder }),
+      client.fetch(nextQuery, { currentOrder }),
+    ]);
 
-  return { previous, next };
+    return { previous, next };
+  } catch (error) {
+    console.error('[Sanity] Failed to fetch project navigation:', error);
+    return { previous: undefined, next: undefined };
+  }
 }
 
 // Fetch all project slugs for static generation
@@ -380,5 +425,10 @@ export async function getAllProjectSlugs(): Promise<{ slug: { current: string } 
     slug
   }`;
 
-  return client.fetch(query);
+  try {
+    return await client.fetch(query);
+  } catch (error) {
+    console.error('[Sanity] Failed to fetch project slugs:', error);
+    return [];
+  }
 }
