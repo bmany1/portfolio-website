@@ -1,0 +1,33 @@
+# Dependabot configuration for automated security updates
+# Docs: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates
+
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/New_York"
+
+    # Security-focused configuration
+    open-pull-requests-limit: 10
+
+    # Labels for easy identification
+    labels:
+      - "dependencies"
+      - "security"
+
+    # Commit message configuration
+    commit-message:
+      prefix: "Security"
+      include: "scope"
+
+    # Assignees (optional - add your GitHub username if desired)
+    # assignees:
+    #   - "bmany1"
+
+    # Reviewers (optional)
+    # reviewers:
+    #   - "bmany1"
