@@ -1,13 +1,14 @@
-import CTASection from "@/components/CTASection";
-import FeaturedProjects from "@/components/FeaturedProjects";
-import HeroSection from "@/components/HeroSection";
-import WhatIDoSection from "@/components/WhatIDoSection";
-import WhereIveWorked from "@/components/WhereIveWorked";
-import {
-  getFeaturedProjects,
-  getHomepage,
-  type Project,
-} from "@/sanity/queries";
+import { getFeaturedProjects, getHomepage, type Project } from "@/sanity/queries";
+
+// Experimental components
+import NavigationExperimental from "@/components/experimental/NavigationExperimental";
+import ParticleField from "@/components/experimental/ParticleField";
+import CustomCursor from "@/components/experimental/CustomCursor";
+import HeroExperimental from "@/components/experimental/HeroExperimental";
+import AboutSection from "@/components/experimental/AboutSection";
+import ProjectsShowcase from "@/components/experimental/ProjectsShowcase";
+import ExperienceTimeline from "@/components/experimental/ExperienceTimeline";
+import ContactSection from "@/components/experimental/ContactSection";
 
 export default async function Home() {
   // Fetch homepage content and featured projects from Sanity
@@ -22,7 +23,8 @@ export default async function Home() {
       _id: "placeholder-1",
       title: "E-Commerce Platform Redesign",
       slug: { current: "ecommerce-redesign" },
-      description: "Led the complete redesign of a multi-million dollar e-commerce platform, improving conversion rates by 40%.",
+      description:
+        "Led the complete redesign of a multi-million dollar e-commerce platform, improving conversion rates by 40%.",
       technologies: ["Product Strategy", "UX Design", "A/B Testing"],
       featured: true,
       order: 1,
@@ -31,10 +33,31 @@ export default async function Home() {
       _id: "placeholder-2",
       title: "Mobile App Launch",
       slug: { current: "mobile-app" },
-      description: "Spearheaded the development and launch of a mobile-first experience, reaching 100K users in the first month.",
+      description:
+        "Spearheaded the development and launch of a mobile-first experience, reaching 100K users in the first month.",
       technologies: ["Mobile", "User Research", "Agile"],
       featured: true,
       order: 2,
+    },
+    {
+      _id: "placeholder-3",
+      title: "AI-Powered Analytics Dashboard",
+      slug: { current: "analytics-dashboard" },
+      description:
+        "Built an intelligent analytics platform that provides real-time insights and predictive recommendations.",
+      technologies: ["Data Science", "Machine Learning", "React"],
+      featured: true,
+      order: 3,
+    },
+    {
+      _id: "placeholder-4",
+      title: "Fintech Payment Integration",
+      slug: { current: "fintech-payments" },
+      description:
+        "Designed and shipped a seamless payment integration serving millions of transactions per month.",
+      technologies: ["Fintech", "API Design", "Security"],
+      featured: true,
+      order: 4,
     },
   ];
 
@@ -42,61 +65,78 @@ export default async function Home() {
   const displayProjects =
     featuredProjects.length > 0 ? featuredProjects : placeholderProjects;
 
-  // If homepage data doesn't exist yet, show a message
-  if (!homepage) {
-    return (
-      <div className="min-h-screen flex items-center justify-center px-6">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold mb-4">Welcome!</h1>
-          <p className="text-xl text-white/60 mb-6">
-            Please create your homepage content in Sanity Studio
-          </p>
-          <a
-            href="/studio"
-            className="inline-block px-8 py-4 bg-accent text-black font-medium rounded-full hover:bg-accent-hover transition-colors"
-          >
-            Go to Studio
-          </a>
-        </div>
-      </div>
-    );
-  }
+  // Extract data from homepage content or use defaults
+  const heroHeading = homepage?.heroSection?.heading?.split(",")[0] || "Bryan Many";
+  const heroTagline = "Product Manager";
+  const heroBio =
+    homepage?.heroSection?.bio ||
+    "Building digital products that people love. Passionate about bridging user needs with business goals.";
+
+  const companies = homepage?.whereIveWorked?.companies || [];
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <HeroSection
-        heading={homepage.heroSection.heading}
-        bio={homepage.heroSection.bio}
-        headshotImage={homepage.heroSection.headshotImage}
-        resumeFile={homepage.heroSection.resumeFile}
-        resumeLinkText={homepage.heroSection.resumeLinkText}
-      />
+    <>
+      {/* Interactive elements */}
+      <NavigationExperimental />
+      <ParticleField />
+      <CustomCursor />
 
-      {/* Where I've Worked Section */}
-      <WhereIveWorked
-        sectionTitle={homepage.whereIveWorked.sectionTitle}
-        companies={homepage.whereIveWorked.companies}
-      />
+      <main className="relative">
+        {/* Hero Section */}
+        <HeroExperimental
+          heading={heroHeading}
+          tagline={heroTagline}
+          subheading={heroBio}
+        />
 
-      {/* What I Do Section */}
-      <WhatIDoSection columns={homepage.whatIDo.columns} />
+        {/* About Section */}
+        <div id="about">
+          <AboutSection
+            bio={heroBio}
+            skills={[
+              { name: "Product Strategy", level: 95 },
+              { name: "User Research", level: 90 },
+              { name: "Data Analysis", level: 85 },
+              { name: "Technical Leadership", level: 88 },
+              { name: "Agile / Scrum", level: 92 },
+              { name: "Stakeholder Management", level: 90 },
+            ]}
+          />
+        </div>
 
-      {/* Featured Projects Section */}
-      <FeaturedProjects
-        projects={displayProjects}
-        eyebrow={homepage.featuredWork.eyebrow}
-        sectionTitle={homepage.featuredWork.sectionTitle}
-        description={homepage.featuredWork.description}
-        ctaText={homepage.featuredWork.ctaText}
-      />
+        {/* Projects Section */}
+        <div id="projects">
+          <ProjectsShowcase
+            projects={displayProjects}
+            sectionTitle={homepage?.featuredWork?.sectionTitle || "Featured Work"}
+          />
+        </div>
 
-      {/* Contact/CTA Section */}
-      <CTASection
-        heading={homepage.contactCTA.heading}
-        subtext={homepage.contactCTA.subtext}
-        buttonText={homepage.contactCTA.buttonText}
-      />
-    </div>
+        {/* Experience Section */}
+        <div id="experience">
+          <ExperienceTimeline
+            companies={companies.map((c: { name: string }) => ({
+              name: c.name,
+              role: "Product Manager",
+              period: "2020 - Present",
+            }))}
+            sectionTitle={
+              homepage?.whereIveWorked?.sectionTitle || "Where I've Worked"
+            }
+          />
+        </div>
+
+        {/* Contact Section */}
+        <div id="contact">
+          <ContactSection
+            heading={homepage?.contactCTA?.heading || "Let's Build Something Together"}
+            subtext={
+              homepage?.contactCTA?.subtext ||
+              "Have a project in mind? I'm always open to discussing new opportunities and ideas."
+            }
+          />
+        </div>
+      </main>
+    </>
   );
 }

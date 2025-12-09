@@ -12,10 +12,12 @@
     "check": "npm run lint && npm run type-check"
   },
   "dependencies": {
+    "@gsap/react": "^2.1.2",
     "@portabletext/react": "^5.0.0",
     "@sanity/image-url": "^1.2.0",
     "@sanity/vision": "^4.14.2",
     "framer-motion": "^12.23.24",
+    "gsap": "^3.14.1",
     "next": "^16.0.7",
     "next-sanity": "^11.6.5",
     "react": "^19.2.1",
