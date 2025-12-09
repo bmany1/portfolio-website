@@ -1,103 +1,137 @@
-# Portfolio Website - Claude Context
+# Portfolio Website - Experimental Redesign
+
+## Branch Info
+**Branch**: `experimental-redesign` (separate from production `main` branch)
+**Preview URL**: Check Vercel dashboard for latest preview deployment
+**Production URL** (main branch): https://portfolio-website-gamma-seven-65.vercel.app/
 
 ## Project Overview
-Portfolio website for Bryan Many (Product Manager). Next.js 14 + TypeScript + Tailwind CSS + Framer Motion + Sanity.io CMS. Deployed on Vercel at https://portfolio-website-gamma-seven-65.vercel.app/
+Experimental redesign of Bryan Many's portfolio with a "Terminal Noir" aesthetic - a sophisticated, code-inspired dark theme with premium scroll animations. Inspired by microsoft.ai, titangatequity.com, and izum.study.
 
 **GitHub**: https://github.com/bmany1/portfolio-website
 
-## Tech Stack & Design
+## Tech Stack
 
 ### Core
 - **Next.js 16.0.7** (App Router, Turbopack)
 - **TypeScript** - Type-safe development
 - **Tailwind CSS v4** - Utility-first styling
-- **Framer Motion** - Animations
+- **Framer Motion** - Scroll animations, useScroll, useTransform
+- **GSAP + ScrollTrigger** - Advanced scroll-pinned animations
 - **Sanity.io** - Headless CMS at `/studio` route
 
-### Theme
-- **Navy dark**: #2F2E2E background, #FFFFFF text
-- **Golden-yellow accent**: #FBBF24 for CTAs/highlights
-- **Typography**: Inter (sans-serif) + Fira Code (monospace)
-- Inspired by danielroren.com (colors) and justinhinh.webflow.io (layout)
+### Design System: "Terminal Noir"
 
-### Deployment
-- **Vercel** - Auto-deploy from GitHub
-- **Domain**: bryanmany.com (pending transfer from Squarespace)
-- **Dependabot**: Weekly security scans enabled
+**Colors:**
+- Background: `#0a0a0b` (near-black), `#111113`, `#18181b`
+- Text: `#fafafa` (primary), `#a1a1aa` (secondary), `#52525b` (muted)
+- Accents: `#00f0ff` (cyan), `#ff3366` (pink), `#ffd700` (gold)
 
-## Project Structure (Simplified)
+**Typography:**
+- Display: Space Grotesk (geometric, modern)
+- Body: Outfit (clean, readable)
+- Code/Mono: JetBrains Mono (terminal aesthetic)
+
+**Effects:**
+- Noise texture overlay
+- Animated grid background with floating glow orbs
+- Custom cursor (dot + ring)
+- Particle field that responds to mouse
+
+## Project Structure
 
 ```
 src/
 ├── app/
-│   ├── page.tsx              # Homepage
-│   ├── projects/
-│   │   ├── page.tsx          # Projects listing
-│   │   └── [slug]/page.tsx   # Project detail pages (SSG)
-│   ├── about/page.tsx        # About page
-│   ├── contact/page.tsx      # Contact form (Formspree)
-│   ├── studio/               # Embedded Sanity Studio
-│   ├── api/revalidate/       # Webhook for CDN cache purging
-│   ├── error.tsx             # Error boundary
-│   └── not-found.tsx         # 404 page
+│   ├── page.tsx              # Experimental homepage (scroll sections)
+│   ├── layout.tsx            # New fonts + background effects
+│   ├── globals.css           # Terminal Noir design system
+│   └── [other pages]         # About, Projects, Contact, Studio
 ├── components/
-│   ├── Navigation.tsx        # Animated nav
-│   ├── ProjectCard.tsx       # Shared card component
-│   ├── ContactForm.tsx       # Form with Formspree
-│   └── [other components]
-├── sanity/
-│   ├── schemas/              # CMS content types
-│   ├── client.ts             # Sanity config (CDN in prod)
-│   └── queries.ts            # GROQ queries with error handling
-└── lib/
-    └── sanity-image.ts       # Image optimization utilities
+│   ├── experimental/         # NEW: Experimental redesign components
+│   │   ├── ParticleField.tsx       # Interactive particle background
+│   │   ├── CustomCursor.tsx        # Custom cursor with hover states
+│   │   ├── TextScramble.tsx        # Text scramble animation effect
+│   │   ├── NavigationExperimental.tsx  # New nav with scroll hide
+│   │   ├── HeroExperimental.tsx    # Scroll-pinned hero section
+│   │   ├── AboutSection.tsx        # Skills + terminal card
+│   │   ├── ProjectsShowcase.tsx    # Interactive project cards
+│   │   ├── ExperienceTimeline.tsx  # Animated timeline
+│   │   └── ContactSection.tsx      # Terminal-style contact
+│   └── [original components] # Kept for reference/other pages
+├── sanity/                   # CMS (unchanged)
+└── lib/                      # Utilities (unchanged)
 ```
 
-## Sanity CMS Schemas
+## Key Components
 
-All content managed through Sanity Studio at `/studio`:
+### ParticleField.tsx
+Canvas-based particle system with mouse interaction. Particles push away from cursor and return with easing. Connected dots create network effect.
 
-- **homepage** (singleton) - Hero, What I Do, Featured Work sections
-- **siteSettings** (singleton) - Email, social links (global)
-- **project** - Title, slug, cardImage, heroImage, content (PortableText with images/videos), tech stack
-- **about** - Bio, skills, profile image
-- **projectsPageSettings** (singleton) - Page header + footer CTA
-- **contactPageSettings** (singleton) - Page copy + Formspree ID
+### CustomCursor.tsx
+Dual-layer cursor (dot + ring) using Framer Motion springs. Scales up on hoverable elements (links, buttons, `data-cursor="hover"`).
 
-## Critical Technical Details
+### TextScramble.tsx
+Text scramble/decode effect triggered on scroll into view. Characters cycle through random glyphs before revealing final text.
 
-### Animations Architecture
-- Server components pass data to client components for animations
-- Framer Motion with `once: true` for scroll triggers (no re-animation)
-- Page transitions via `template.tsx`
-- `useInView` hook with negative margins for earlier triggers
-- 150ms transitions for snappy hover effects
+### HeroExperimental.tsx
+- GSAP character-by-character reveal animation
+- Framer Motion `useScroll` + `useTransform` for parallax
+- Words wrapped in `whitespace-nowrap` to prevent mid-word breaks
+- Scroll indicator with pulsing animation
 
-### Image Optimization
-- Sanity CDN with automatic WebP conversion
-- `getCardImageUrl()`: 1600px, 85% quality, 16:10 ratio
-- `getHeroImageUrl()`: 1920px, 90% quality, 16:9 ratio
-- Retroactive optimization (existing images auto-optimized)
-- 60-80% file size reduction typical
+### AboutSection.tsx
+- Animated skill bars with gradient fills
+- Stats counter (years, products, users)
+- Terminal-style card with fake command output
 
-### Error Handling & Reliability
-- All Sanity queries wrapped in try/catch with graceful fallbacks
-- Arrays return `[]` on error, singletons return `null`
-- Error boundary catches component crashes
-- Branded 404 page for missing routes
-- Console errors prefixed with `[Sanity]`
+### ProjectsShowcase.tsx
+- Large cards with hover border glow
+- Image zoom on hover
+- Technology tags with hover effects
+- Project numbers that change color on hover
 
-### Performance Optimization
-- Sanity CDN enabled in production: `useCdn: process.env.NODE_ENV === "production"`
-- 30-50% faster page loads via edge caching
-- Webhook system (`/api/revalidate`) for instant cache invalidation
-- `REVALIDATE_SECRET` env var for webhook security
+### ExperienceTimeline.tsx
+- Vertical timeline with scroll-linked progress line
+- Alternating card layout on desktop
+- Animated timeline dots
 
-### Code Organization
-- ProjectCard component shared between FeaturedProjects and ProjectsGrid
-- PortableText supports images (with alt text), videos (with poster), H1/H2/H3 styling
-- Social links in siteSettings (reusable across site)
-- Resume PDF hosted in Sanity
+### ContactSection.tsx
+- Terminal boot sequence animation
+- Real-time clock display
+- Email reveal with typing effect
+- Social links as terminal output
+
+## Animation Patterns
+
+### Scroll-Linked (Framer Motion)
+```tsx
+const { scrollYProgress } = useScroll({ target: ref, offset: [...] });
+const y = useTransform(scrollYProgress, [0, 1], [0, -200]);
+const smoothY = useSpring(y, { stiffness: 100, damping: 30 });
+```
+
+### GSAP Character Animation
+```tsx
+gsap.fromTo(chars,
+  { y: 100, opacity: 0, rotateX: -90 },
+  { y: 0, opacity: 1, rotateX: 0, stagger: 0.03 }
+);
+```
+
+### Viewport Triggers
+```tsx
+const isInView = useInView(ref, { once: true, margin: "-100px" });
+```
+
+## CSS Variables (globals.css)
+
+Key custom properties for the design system:
+- `--bg-primary`, `--bg-secondary`, `--bg-tertiary`
+- `--text-primary`, `--text-secondary`, `--text-muted`
+- `--accent-primary` (cyan), `--accent-secondary` (pink)
+- `--border-subtle`, `--border-accent`
+- `--ease-out-expo`, `--ease-out-quart` (animation curves)
 
 ## Key Commands
 
@@ -108,61 +142,51 @@ npm run lint         # ESLint check
 npm run type-check   # TypeScript check
 ```
 
-## Environment Variables (.env.local)
+## Development Notes
 
+### Adding Hover Effects
+Add `data-cursor="hover"` to any element for custom cursor interaction:
+```tsx
+<button data-cursor="hover">Click me</button>
 ```
-NEXT_PUBLIC_SANITY_PROJECT_ID=your-project-id
-NEXT_PUBLIC_SANITY_DATASET=production
-REVALIDATE_SECRET=your-webhook-secret
+
+### Preventing Text Wrap Issues
+For animated text, wrap words (not just characters) to prevent mid-word breaks:
+```tsx
+{text.split(" ").map(word => (
+  <span className="inline-block whitespace-nowrap">...</span>
+))}
 ```
 
-## Setup Documentation
+### Scroll Section Pattern
+For scroll-pinned sections, use the sticky container pattern:
+```tsx
+<section className="min-h-[200vh]">
+  <div className="sticky top-0 h-screen">
+    {/* Content animates based on scroll */}
+  </div>
+</section>
+```
 
-- **SETUP.md** - Instructions for new computer setup
-- **WEBHOOK_SETUP.md** - Sanity webhook configuration (CDN cache purging)
-- **SANITY_SETUP.md** - Sanity CMS setup instructions
+## Status
 
-## Current Status (as of 2025-12-08)
+**Current (experimental-redesign branch):**
+- Homepage redesign complete with all scroll sections
+- Interactive backgrounds and cursor working
+- Responsive design needs refinement
+- Other pages (About, Projects, Contact) still use original design
 
-**✅ Production-Ready Features:**
-- All pages built and deployed (Home, Projects, About, Contact)
-- All content managed through Sanity CMS
-- Comprehensive animations (parallax, scroll reveals, hover effects)
-- Error handling (404, error boundary, query fallbacks)
-- Image/video optimization via Sanity CDN
-- Contact form (Formspree integration)
-- Project detail pages with rich content
-- Responsive design (mobile-first)
-- Security updates automated (Dependabot)
-
-**⏳ Pending:**
-- Domain transfer from Squarespace to Vercel
-- Analytics setup (optional)
-- SEO meta tags (optional)
-
-## Recent Updates
-
-### 2025-12-08: Security Patch
-- Updated Next.js 16.0.1 → 16.0.7 (CVE-2025-66478)
-- Updated React 19.2.0 → 19.2.1 (CVE-2025-55182)
-- Configured Dependabot for weekly security scans
-
-### 2025-12-02: Session 9 Testing
-- Verified all Session 9 optimizations in production
-- Configured Sanity webhook for instant content updates
-- All systems operational
-
-### 2025-11-29: Session 9 Optimizations
-- Enabled Sanity CDN in production (30-50% faster page loads)
-- Extracted shared ProjectCard component (eliminated 147 lines duplication)
-- Added comprehensive error handling to all Sanity queries
-- Created 404 page and error boundary
-- Built webhook system for CDN cache invalidation
+**Not Yet Updated:**
+- Individual project pages
+- About page
+- Contact page
+- Mobile animations (some disabled for performance)
 
 ## Quick Reference
 
-**Production URL**: https://portfolio-website-gamma-seven-65.vercel.app/
-**Sanity Studio**: https://portfolio-website-gamma-seven-65.vercel.app/studio
+**Preview**: Check Vercel dashboard for `experimental-redesign` deployment
+**Production** (main): https://portfolio-website-gamma-seven-65.vercel.app/
+**Sanity Studio**: /studio route
 **GitHub**: https://github.com/bmany1/portfolio-website
 
-**User Context**: Product manager learning to code. Updates portfolio a few times per year. Prioritizes quality over speed.
+**User Context**: Product manager learning to code. This experimental branch explores cutting-edge UI/UX patterns while keeping the stable production site separate.
