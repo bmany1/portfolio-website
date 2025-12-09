@@ -1,10 +1,20 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { motion } from "framer-motion";
 
 export default function Template({ children }: { children: React.ReactNode }) {
-  useEffect(() => {
+  // Use useLayoutEffect for synchronous scroll before paint
+  // Falls back to useEffect for SSR compatibility
+  const useIsomorphicLayoutEffect =
+    typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
+  useIsomorphicLayoutEffect(() => {
+    // Disable browser's automatic scroll restoration
+    if ("scrollRestoration" in history) {
+      history.scrollRestoration = "manual";
+    }
+    // Scroll to top synchronously before browser paints
     window.scrollTo(0, 0);
   }, []);
 
