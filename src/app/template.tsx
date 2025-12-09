@@ -14,8 +14,28 @@ export default function Template({ children }: { children: React.ReactNode }) {
     if ("scrollRestoration" in history) {
       history.scrollRestoration = "manual";
     }
-    // Scroll to top synchronously before browser paints
+
+    // Immediate scroll attempt
     window.scrollTo(0, 0);
+
+    // Chrome iOS has aggressive scroll restoration that fires after initial paint.
+    // Use requestAnimationFrame to scroll after browser's restoration completes.
+    const scrollToTop = () => window.scrollTo(0, 0);
+
+    // First rAF: scheduled for next frame
+    const raf1 = requestAnimationFrame(() => {
+      scrollToTop();
+      // Second rAF: ensures we're after any browser restoration
+      requestAnimationFrame(scrollToTop);
+    });
+
+    // Fallback timeout for stubborn Chrome iOS edge cases (form pages, etc.)
+    const timeout = setTimeout(scrollToTop, 100);
+
+    return () => {
+      cancelAnimationFrame(raf1);
+      clearTimeout(timeout);
+    };
   }, []);
 
   return (
