@@ -143,6 +143,17 @@ REVALIDATE_SECRET=your-webhook-secret
 
 ## Recent Updates
 
+### 2025-12-29: Uniform Card Heights with Smart Tag Truncation
+- Added `min-h-[244px]` to ProjectCard content area for consistent card heights
+- Implemented smart responsive tag truncation in `ProjectCard.tsx`:
+  - Calculates how many tags fit in container width
+  - Shows "+N more" indicator (amber accent) when tags overflow
+  - Resize listener recalculates on viewport changes (debounced 100ms)
+  - Works across all breakpoints (mobile: 3 tags, desktop: 5 tags)
+- Added `line-clamp-2` to truncate descriptions at 2 lines
+- Updated Sanity schema with 120 character max for project descriptions
+- Tags display: single row, no cutoff, no horizontal scroll appearance
+
 ### 2025-12-29: About Page CTA Update
 - Replaced "Email Me" mailto button with "Contact Me" link to /contact page
 - Drives users to the contact form instead of opening email client
