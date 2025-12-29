@@ -26,7 +26,8 @@ export default defineType({
       title: "Description",
       type: "text",
       rows: 3,
-      validation: (Rule) => Rule.required(),
+      description: "Brief project summary shown on cards. Keep under 120 characters for best display.",
+      validation: (Rule) => Rule.required().max(120).warning("Descriptions over 120 characters may be truncated on project cards."),
     }),
     defineField({
       name: "cardImage",

@@ -2,7 +2,7 @@
 
 import { motion, useInView } from "framer-motion";
 import Link from "next/link";
-import { useRef } from "react";
+import { useRef, useState, useLayoutEffect, useMemo, useCallback, useEffect } from "react";
 
 import type { Project } from "@/sanity/queries";
 import { getCardImageUrl } from "@/lib/sanity-image";
@@ -27,7 +27,94 @@ export default function ProjectCard({
   includeScale = false,
 }: ProjectCardProps) {
   const ref = useRef(null);
+  const tagsContainerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: viewportMargin as `${number}px` });
+
+  const [visibleTagCount, setVisibleTagCount] = useState<number | null>(null);
+  const technologies = useMemo(() => project.technologies || [], [project.technologies]);
+  const hiddenTagCount = visibleTagCount !== null ? technologies.length - visibleTagCount : 0;
+
+  // Calculate how many tags fit in one row
+  const calculateVisibleTags = useCallback(() => {
+    if (!tagsContainerRef.current || technologies.length === 0) {
+      setVisibleTagCount(technologies.length);
+      return;
+    }
+
+    const container = tagsContainerRef.current;
+    const containerWidth = container.offsetWidth;
+    const gap = 8; // gap-2 = 8px
+    const moreIndicatorWidth = 85; // Width for "+N more" indicator
+
+    // Measure each tag's width
+    const tagElements = container.querySelectorAll('[data-tag]');
+    const tagWidths: number[] = [];
+
+    tagElements.forEach((tag) => {
+      tagWidths.push((tag as HTMLElement).offsetWidth);
+    });
+
+    // Calculate total width if all tags were shown
+    const totalAllTagsWidth = tagWidths.reduce((sum, w, i) => sum + w + (i > 0 ? gap : 0), 0);
+
+    // If all tags fit, show them all
+    if (totalAllTagsWidth <= containerWidth) {
+      setVisibleTagCount(technologies.length);
+      return;
+    }
+
+    // Otherwise, find how many tags fit WITH the indicator
+    let totalWidth = 0;
+    let count = 0;
+    const spaceForIndicator = moreIndicatorWidth + gap;
+
+    for (let i = 0; i < tagWidths.length; i++) {
+      const tagWidth = tagWidths[i];
+      const widthWithGap = i === 0 ? tagWidth : tagWidth + gap;
+
+      // Check if this tag fits, leaving room for the indicator
+      if (totalWidth + widthWithGap + spaceForIndicator <= containerWidth) {
+        totalWidth += widthWithGap;
+        count++;
+      } else {
+        // This tag doesn't fit, stop here
+        break;
+      }
+    }
+
+    // Ensure at least 1 tag is shown if there are any
+    setVisibleTagCount(Math.max(1, count));
+  }, [technologies]);
+
+  // Initial calculation
+  useLayoutEffect(() => {
+    calculateVisibleTags();
+  }, [calculateVisibleTags]);
+
+  // Recalculate on window resize
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
+    const handleResize = () => {
+      // Debounce resize events
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        // Reset to null to force re-measurement with all tags visible
+        setVisibleTagCount(null);
+        // Use requestAnimationFrame to ensure DOM has updated
+        requestAnimationFrame(() => {
+          calculateVisibleTags();
+        });
+      }, 100);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(timeoutId);
+    };
+  }, [calculateVisibleTags]);
 
   const imageSource = project.cardImage || project.mainImage;
 
@@ -66,33 +153,61 @@ export default function ProjectCard({
         </div>
 
         {/* Project Info */}
-        <div className="p-8">
+        <div className="p-8 min-h-[244px] flex flex-col">
           <h3 className="text-2xl font-semibold mb-3 group-hover:text-white/80 transition-colors">
             {project.title}
           </h3>
-          <p className="text-white/60 mb-6 leading-relaxed">
+          <p className="text-white/60 mb-6 leading-relaxed line-clamp-2">
             {project.description}
           </p>
 
-          {/* Tags */}
-          {project.technologies && project.technologies.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {project.technologies.map((tag, tagIndex) => (
+          {/* Tags - Single row with smart truncation */}
+          {technologies.length > 0 && (
+            <div ref={tagsContainerRef} className="flex gap-2 mt-auto overflow-hidden">
+              {technologies.map((tag, tagIndex) => {
+                // During initial render, show all tags for measurement
+                // After measurement, only show visible tags
+                const shouldShow = visibleTagCount === null || tagIndex < visibleTagCount;
+
+                return (
+                  <motion.span
+                    key={tagIndex}
+                    data-tag
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={
+                      isInView && shouldShow
+                        ? { opacity: 1, scale: 1 }
+                        : { opacity: 0, scale: 0.8 }
+                    }
+                    transition={{
+                      duration: 0.3,
+                      delay: tagAnimationDelay + tagIndex * 0.05,
+                    }}
+                    className={`text-xs font-mono text-white/50 px-3 py-1 border border-white/10 rounded-full hover:border-white/30 hover:text-white/70 transition-colors whitespace-nowrap ${
+                      !shouldShow ? "hidden" : ""
+                    }`}
+                  >
+                    {tag}
+                  </motion.span>
+                );
+              })}
+
+              {/* "+N more" indicator */}
+              {hiddenTagCount > 0 && (
                 <motion.span
-                  key={tagIndex}
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={
                     isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }
                   }
                   transition={{
                     duration: 0.3,
-                    delay: tagAnimationDelay + tagIndex * 0.05,
+                    delay: tagAnimationDelay + (visibleTagCount || 0) * 0.05,
                   }}
-                  className="text-xs font-mono text-white/40 px-3 py-1 border border-white/10 rounded-full hover:border-white/30 hover:text-white/60 transition-colors"
+                  className="text-xs font-mono text-amber-400/70 px-3 py-1 border border-amber-400/30 rounded-full whitespace-nowrap flex-shrink-0"
                 >
-                  {tag}
+                  +{hiddenTagCount} more
                 </motion.span>
-              ))}
+              )}
             </div>
           )}
         </div>
