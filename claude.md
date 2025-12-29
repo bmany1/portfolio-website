@@ -8,7 +8,7 @@ Portfolio website for Bryan Many (Product Manager). Next.js 14 + TypeScript + Ta
 ## Tech Stack & Design
 
 ### Core
-- **Next.js 16.0.7** (App Router, Turbopack)
+- **Next.js 16.0.8** (App Router, Turbopack)
 - **TypeScript** - Type-safe development
 - **Tailwind CSS v4** - Utility-first styling
 - **Framer Motion** - Animations
@@ -69,7 +69,7 @@ All content managed through Sanity Studio at `/studio`:
 ### Animations Architecture
 - Server components pass data to client components for animations
 - Framer Motion with `once: true` for scroll triggers (no re-animation)
-- Page transitions via `template.tsx`
+- Page transitions via `template.tsx` (also handles scroll-to-top on navigation)
 - `useInView` hook with negative margins for earlier triggers
 - 150ms transitions for snappy hover effects
 
@@ -122,7 +122,7 @@ REVALIDATE_SECRET=your-webhook-secret
 - **WEBHOOK_SETUP.md** - Sanity webhook configuration (CDN cache purging)
 - **SANITY_SETUP.md** - Sanity CMS setup instructions
 
-## Current Status (as of 2025-12-08)
+## Current Status (as of 2025-12-29)
 
 **✅ Production-Ready Features:**
 - All pages built and deployed (Home, Projects, About, Contact)
@@ -134,6 +134,7 @@ REVALIDATE_SECRET=your-webhook-secret
 - Project detail pages with rich content
 - Responsive design (mobile-first)
 - Security updates automated (Dependabot)
+- Mobile scroll behavior fixed (Chrome iOS, Safari)
 
 **⏳ Pending:**
 - Domain transfer from Squarespace to Vercel
@@ -141,6 +142,19 @@ REVALIDATE_SECRET=your-webhook-secret
 - SEO meta tags (optional)
 
 ## Recent Updates
+
+### 2025-12-29: About Page CTA Update
+- Replaced "Email Me" mailto button with "Contact Me" link to /contact page
+- Drives users to the contact form instead of opening email client
+
+### 2025-12-09: Mobile Scroll Fix
+- Fixed scroll position persistence on iOS (Chrome and Safari)
+- Issue: navigating between pages kept previous scroll position
+- Solution: Multi-strategy scroll reset in `template.tsx`:
+  - `useLayoutEffect` with `history.scrollRestoration = "manual"`
+  - Double `requestAnimationFrame` to beat browser restoration timing
+  - 100ms fallback timeout for form pages and edge cases
+- Tested via BrowserStack on iPhone 15 Pro Max
 
 ### 2025-12-08: Security Patch
 - Updated Next.js 16.0.1 → 16.0.7 (CVE-2025-66478)
@@ -166,3 +180,45 @@ REVALIDATE_SECRET=your-webhook-secret
 **GitHub**: https://github.com/bmany1/portfolio-website
 
 **User Context**: Product manager learning to code. Updates portfolio a few times per year. Prioritizes quality over speed.
+
+---
+
+## RESOLVED: Sanity Studio EventSource Connection Issue (2025-12-13)
+
+### Problem (Now Fixed)
+Sanity Studio showed "Trying to connect..." indefinitely with error:
+```
+Error: Failed to establish EventSource connection
+```
+
+### Root Cause
+**TotalAV WebShield** was blocking Server-Sent Events (SSE) connections to Sanity's real-time API. Antivirus web scanners see `text/event-stream` responses as suspicious "never-ending downloads" and block them.
+
+Key evidence:
+- `curl` worked perfectly (bypasses browser/antivirus)
+- Browser EventSource failed with `net::ERR_ABORTED`
+- Disabling TotalAV WebShield immediately fixed the issue
+
+### Solution
+**Disable TotalAV WebShield** or add Sanity domains to its Allow List:
+- `*.sanity.io`
+- `*.api.sanity.io`
+
+### Changes Made During Troubleshooting (Keep These)
+1. **`next.config.ts`** - Added `serverExternalPackages: ["jsdom", "isomorphic-dompurify"]` (fixes jsdom v27 bundling issue)
+2. **`sanity.cli.ts`** - Created for Sanity CLI commands
+3. **`sanity.config.ts`** - Added hardcoded fallbacks for projectId/dataset
+4. **`styled-components`** - Added as peer dependency for Sanity
+5. **Sanity MCP server** - Installed for Claude Code integration
+
+### Key Takeaway
+If Sanity Studio shows connection errors but API works via curl, check for:
+1. Antivirus web protection (TotalAV, Norton, etc.)
+2. VPN software with web filtering
+3. Browser extensions blocking SSE connections
+
+The issue is NOT related to:
+- CORS configuration
+- Sanity authentication
+- Next.js bundling
+- Browser choice
