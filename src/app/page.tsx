@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import CTASection from "@/components/CTASection";
 import FeaturedProjects from "@/components/FeaturedProjects";
 import HeroSection from "@/components/HeroSection";
@@ -26,12 +28,12 @@ export default async function Home() {
           <p className="text-xl text-white/60 mb-6">
             Please create your homepage content in Sanity Studio
           </p>
-          <a
+          <Link
             href="/studio"
             className="inline-block px-8 py-4 bg-accent text-black font-medium rounded-full hover:bg-accent-hover transition-colors"
           >
             Go to Studio
-          </a>
+          </Link>
         </div>
       </div>
     );

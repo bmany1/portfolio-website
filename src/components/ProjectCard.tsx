@@ -86,8 +86,10 @@ export default function ProjectCard({
     setVisibleTagCount(Math.max(1, count));
   }, [technologies]);
 
-  // Initial calculation
+  // Initial calculation - useLayoutEffect + setState is the correct pattern for
+  // DOM measurement before paint. See: https://react.dev/reference/react/useLayoutEffect
   useLayoutEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     calculateVisibleTags();
   }, [calculateVisibleTags]);
 
