@@ -25,6 +25,8 @@ export default function Error({
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
+              aria-hidden="true"
+              role="img"
             >
               <path
                 strokeLinecap="round"
@@ -48,10 +50,10 @@ export default function Error({
         {/* Error Details (dev only) */}
         {process.env.NODE_ENV === "development" && (
           <details className="mb-8 text-left">
-            <summary className="cursor-pointer text-white/40 hover:text-white/60 transition-colors text-sm font-mono mb-2">
+            <summary className="cursor-pointer text-white/50 hover:text-white/70 transition-colors text-sm font-mono mb-2">
               Error details (dev only)
             </summary>
-            <pre className="text-xs text-white/40 font-mono bg-white/5 p-4 rounded-lg overflow-auto max-h-40">
+            <pre className="text-xs text-white/50 font-mono bg-white/5 p-4 rounded-lg overflow-auto max-h-40">
               {error.message}
               {error.stack && `\n\n${error.stack}`}
             </pre>

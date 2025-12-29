@@ -35,7 +35,7 @@ export default function ProjectsGrid({
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="mb-16"
         >
-          <span className="text-sm font-mono text-white/40 tracking-wider">
+          <span className="text-sm font-mono text-white/50 tracking-wider">
             {eyebrow}
           </span>
           <h1 className="text-5xl md:text-7xl font-bold mt-4 mb-6">{title}</h1>

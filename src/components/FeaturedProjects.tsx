@@ -36,7 +36,7 @@ export default function FeaturedProjects({
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="mb-16"
         >
-          <span className="text-sm font-mono text-white/40 tracking-wider">
+          <span className="text-sm font-mono text-white/50 tracking-wider">
             {eyebrow}
           </span>
           <h2 className="text-4xl md:text-5xl font-bold mt-4 mb-4">
@@ -81,6 +81,7 @@ export default function FeaturedProjects({
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"

@@ -33,7 +33,7 @@ export default function RootLayout({
         className={`${inter.variable} ${firaCode.variable} antialiased`}
       >
         <Navigation />
-        <main className="pt-20">
+        <main id="main-content" className="pt-20">
           {children}
         </main>
       </body>

@@ -79,6 +79,7 @@ export default function ContactForm({
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
+            aria-hidden="true"
           >
             <path
               strokeLinecap="round"
@@ -183,6 +184,7 @@ export default function ContactForm({
           <p className="text-white/60 text-sm mb-2">Prefer email?</p>
           <button
             onClick={copyEmail}
+            aria-label={`Copy email address ${email} to clipboard`}
             className="text-accent hover:text-accent/80 transition-colors group inline-flex items-center gap-2"
           >
             {email}
@@ -191,6 +193,7 @@ export default function ContactForm({
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"
@@ -200,7 +203,7 @@ export default function ContactForm({
               />
             </svg>
           </button>
-          <p className="text-white/40 text-xs mt-1">Click to copy</p>
+          <p className="text-white/50 text-xs mt-1">Click to copy</p>
         </div>
       )}
     </div>
