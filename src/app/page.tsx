@@ -3,11 +3,8 @@ import FeaturedProjects from "@/components/FeaturedProjects";
 import HeroSection from "@/components/HeroSection";
 import WhatIDoSection from "@/components/WhatIDoSection";
 import WhereIveWorked from "@/components/WhereIveWorked";
-import {
-  getFeaturedProjects,
-  getHomepage,
-  type Project,
-} from "@/sanity/queries";
+import { getFeaturedProjects, getHomepage } from "@/sanity/queries";
+import { featuredPlaceholderProjects } from "@/lib/placeholders";
 
 export default async function Home() {
   // Fetch homepage content and featured projects from Sanity
@@ -16,31 +13,9 @@ export default async function Home() {
     getFeaturedProjects(),
   ]);
 
-  // Fallback placeholder projects if none exist in Sanity yet
-  const placeholderProjects: Project[] = [
-    {
-      _id: "placeholder-1",
-      title: "E-Commerce Platform Redesign",
-      slug: { current: "ecommerce-redesign" },
-      description: "Led the complete redesign of a multi-million dollar e-commerce platform, improving conversion rates by 40%.",
-      technologies: ["Product Strategy", "UX Design", "A/B Testing"],
-      featured: true,
-      order: 1,
-    },
-    {
-      _id: "placeholder-2",
-      title: "Mobile App Launch",
-      slug: { current: "mobile-app" },
-      description: "Spearheaded the development and launch of a mobile-first experience, reaching 100K users in the first month.",
-      technologies: ["Mobile", "User Research", "Agile"],
-      featured: true,
-      order: 2,
-    },
-  ];
-
   // Use Sanity projects if available, otherwise use placeholders
   const displayProjects =
-    featuredProjects.length > 0 ? featuredProjects : placeholderProjects;
+    featuredProjects.length > 0 ? featuredProjects : featuredPlaceholderProjects;
 
   // If homepage data doesn't exist yet, show a message
   if (!homepage) {
