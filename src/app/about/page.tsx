@@ -1,4 +1,6 @@
 import { PortableText } from "@portabletext/react";
+import Image from "next/image";
+import Link from "next/link";
 
 import { getAbout, getSiteSettings } from "@/sanity/queries";
 
@@ -13,7 +15,7 @@ export default async function AboutPage() {
       <div className="max-w-5xl mx-auto">
         {/* Page Header */}
         <div className="mb-16">
-          <span className="text-sm font-mono text-white/40 tracking-wider">
+          <span className="text-sm font-mono text-white/50 tracking-wider">
             ABOUT
           </span>
           <h1 className="text-5xl md:text-7xl font-bold mt-4 mb-6">
@@ -56,11 +58,15 @@ export default async function AboutPage() {
           {/* Profile Image */}
           <div className="lg:col-span-1">
             {aboutData?.profileImage?.asset?.url ? (
-              <img
-                src={aboutData.profileImage.asset.url}
-                alt={aboutData.title}
-                className="w-full aspect-square object-cover rounded-2xl"
-              />
+              <div className="relative w-full aspect-square rounded-2xl overflow-hidden">
+                <Image
+                  src={aboutData.profileImage.asset.url}
+                  alt={aboutData.title || "Profile photo"}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 33vw"
+                />
+              </div>
             ) : (
               <div className="aspect-square bg-gradient-to-br from-white/10 to-white/[0.02] rounded-2xl" />
             )}
@@ -75,7 +81,7 @@ export default async function AboutPage() {
               {aboutData.skills.map((skill, i) => (
                 <span
                   key={i}
-                  className="px-4 py-2 border border-white/10 rounded-full text-white/70 hover:border-white/30 transition-colors"
+                  className="px-4 py-2 border border-white/10 rounded-full text-white/75 hover:border-white/30 hover:text-white/90 transition-colors"
                 >
                   {skill}
                 </span>
@@ -92,14 +98,12 @@ export default async function AboutPage() {
           </p>
 
           <div className="flex flex-wrap gap-4">
-            {siteSettings?.email && (
-              <a
-                href={`mailto:${siteSettings.email}`}
-                className="px-6 py-3 bg-white text-black font-medium rounded-full hover:bg-white/90 transition-colors"
-              >
-                Email Me
-              </a>
-            )}
+            <Link
+              href="/contact"
+              className="px-6 py-3 bg-white text-black font-medium rounded-full hover:bg-white/90 transition-colors"
+            >
+              Contact Me
+            </Link>
             {siteSettings?.socialLinks &&
               siteSettings.socialLinks.map((link, i) => (
                 <a
