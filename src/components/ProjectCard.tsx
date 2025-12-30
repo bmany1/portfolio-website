@@ -93,11 +93,25 @@ export default function ProjectCard({
     calculateVisibleTags();
   }, [calculateVisibleTags]);
 
-  // Recalculate on window resize
+  // Recalculate on window resize (only when width changes)
+  // iOS browsers trigger resize events during scroll when the browser chrome animates
+  // (address bar hiding/showing), but these only change height, not width.
+  // We only need to recalculate tags when the actual width changes.
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
+    let lastWidth = window.innerWidth;
 
     const handleResize = () => {
+      const currentWidth = window.innerWidth;
+
+      // Only recalculate if width actually changed
+      // Ignore height-only changes (iOS scroll-triggered browser chrome animations)
+      if (currentWidth === lastWidth) {
+        return;
+      }
+
+      lastWidth = currentWidth;
+
       // Debounce resize events
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => {
