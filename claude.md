@@ -122,7 +122,7 @@ REVALIDATE_SECRET=your-webhook-secret
 - **WEBHOOK_SETUP.md** - Sanity webhook configuration (CDN cache purging)
 - **SANITY_SETUP.md** - Sanity CMS setup instructions
 
-## Current Status (as of 2025-12-29)
+## Current Status (as of 2025-12-30)
 
 **✅ Production-Ready Features:**
 - All pages built and deployed (Home, Projects, About, Contact)
@@ -142,6 +142,14 @@ REVALIDATE_SECRET=your-webhook-secret
 - SEO meta tags (optional)
 
 ## Recent Updates
+
+### 2025-12-30: iOS Tag Truncation Scroll Fix
+- Fixed "+N more" indicator flickering during scroll on iOS (Chrome and Safari)
+- Issue: iOS browsers trigger `resize` events when browser chrome (address bar) animates during scroll
+- These height-only resize events caused unnecessary tag recalculation, showing all tags briefly
+- Solution: Track `lastWidth` in `ProjectCard.tsx` resize handler and only recalculate when width changes
+- Height-only changes (iOS scroll-triggered) are now ignored
+- Tested via BrowserStack on iPhone 15 Pro Max with Chrome
 
 ### 2025-12-29: Uniform Card Heights with Smart Tag Truncation
 - Added `min-h-[244px]` to ProjectCard content area for consistent card heights
