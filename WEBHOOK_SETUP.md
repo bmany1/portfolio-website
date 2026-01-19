@@ -44,7 +44,7 @@ With CDN caching enabled, Sanity content is cached for up to 60 seconds. This me
 ### Step 2: Configure Sanity Webhook
 
 1. Go to your Sanity project dashboard:
-   - https://www.sanity.io/manage/personal/project/w8eezxao
+   - https://www.sanity.io/manage (select your project)
 
 2. Navigate to **API** → **Webhooks** (left sidebar)
 

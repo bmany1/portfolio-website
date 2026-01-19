@@ -8,8 +8,8 @@ export default defineConfig({
   name: "default",
   title: "Portfolio Website",
 
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "w8eezxao",
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
 
   basePath: "/studio",
 

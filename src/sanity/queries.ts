@@ -1,5 +1,35 @@
 import { client } from "./client";
 
+// Helper function for consistent error handling across all queries
+async function safeFetch<T>(
+  query: string,
+  params: Record<string, unknown> = {},
+  errorContext: string,
+  fallback: T
+): Promise<T> {
+  try {
+    return await client.fetch<T>(query, params);
+  } catch (error) {
+    console.error(`[Sanity] ${errorContext}:`, error);
+    return fallback;
+  }
+}
+
+// Reusable GROQ field selections for project queries
+const PROJECT_FIELDS = `
+  _id,
+  title,
+  slug,
+  description,
+  cardImage { asset-> { _ref, url } },
+  mainImage { asset-> { _ref, url } },
+  featured,
+  technologies,
+  projectUrl,
+  githubUrl,
+  order
+`;
+
 // TypeScript types for our content
 export interface Project {
   _id: string;
@@ -146,70 +176,14 @@ export interface ContactPageSettings {
 
 // Fetch all projects, ordered by the 'order' field
 export async function getProjects(): Promise<Project[]> {
-  const query = `*[_type == "project"] | order(order asc) {
-    _id,
-    title,
-    slug,
-    description,
-    cardImage {
-      asset-> {
-        _ref,
-        url
-      }
-    },
-    mainImage {
-      asset-> {
-        _ref,
-        url
-      }
-    },
-    featured,
-    technologies,
-    projectUrl,
-    githubUrl,
-    order
-  }`;
-
-  try {
-    return await client.fetch(query);
-  } catch (error) {
-    console.error('[Sanity] Failed to fetch projects:', error);
-    return [];
-  }
+  const query = `*[_type == "project"] | order(order asc) {${PROJECT_FIELDS}}`;
+  return safeFetch(query, {}, "Failed to fetch projects", []);
 }
 
 // Fetch only featured projects
 export async function getFeaturedProjects(): Promise<Project[]> {
-  const query = `*[_type == "project" && featured == true] | order(order asc) {
-    _id,
-    title,
-    slug,
-    description,
-    cardImage {
-      asset-> {
-        _ref,
-        url
-      }
-    },
-    mainImage {
-      asset-> {
-        _ref,
-        url
-      }
-    },
-    featured,
-    technologies,
-    projectUrl,
-    githubUrl,
-    order
-  }`;
-
-  try {
-    return await client.fetch(query);
-  } catch (error) {
-    console.error('[Sanity] Failed to fetch featured projects:', error);
-    return [];
-  }
+  const query = `*[_type == "project" && featured == true] | order(order asc) {${PROJECT_FIELDS}}`;
+  return safeFetch(query, {}, "Failed to fetch featured projects", []);
 }
 
 // Fetch the about page content (should only be one document)
@@ -218,39 +192,18 @@ export async function getAbout(): Promise<About | null> {
     _id,
     title,
     bio,
-    profileImage {
-      asset-> {
-        _ref,
-        url
-      }
-    },
+    profileImage { asset-> { _ref, url } },
     skills
   }`;
-
-  try {
-    return await client.fetch(query);
-  } catch (error) {
-    console.error('[Sanity] Failed to fetch about content:', error);
-    return null;
-  }
+  return safeFetch(query, {}, "Failed to fetch about content", null);
 }
 
 // Fetch site settings (should only be one document)
 export async function getSiteSettings(): Promise<SiteSettings | null> {
   const query = `*[_type == "siteSettings"][0] {
-    _id,
-    siteName,
-    siteDescription,
-    email,
-    socialLinks
+    _id, siteName, siteDescription, email, socialLinks
   }`;
-
-  try {
-    return await client.fetch(query);
-  } catch (error) {
-    console.error('[Sanity] Failed to fetch site settings:', error);
-    return null;
-  }
+  return safeFetch(query, {}, "Failed to fetch site settings", null);
 }
 
 // Fetch homepage content (should only be one document)
@@ -258,177 +211,64 @@ export async function getHomepage(): Promise<Homepage | null> {
   const query = `*[_type == "homepage"][0] {
     _id,
     heroSection {
-      heading,
-      bio,
-      headshotImage {
-        asset-> {
-          _ref,
-          url
-        }
-      },
-      resumeFile {
-        asset-> {
-          _ref,
-          url
-        }
-      },
+      heading, bio,
+      headshotImage { asset-> { _ref, url } },
+      resumeFile { asset-> { _ref, url } },
       resumeLinkText
     },
     whereIveWorked {
       sectionTitle,
-      companies[] {
-        name,
-        logo {
-          asset-> {
-            _ref,
-            url
-          }
-        }
-      }
+      companies[] { name, logo { asset-> { _ref, url } } }
     },
-    whatIDo {
-      columns[] {
-        title,
-        description,
-        items
-      }
-    },
-    featuredWork {
-      eyebrow,
-      sectionTitle,
-      description,
-      ctaText
-    },
-    contactCTA {
-      heading,
-      subtext,
-      buttonText
-    }
+    whatIDo { columns[] { title, description, items } },
+    featuredWork { eyebrow, sectionTitle, description, ctaText },
+    contactCTA { heading, subtext, buttonText }
   }`;
-
-  try {
-    return await client.fetch(query);
-  } catch (error) {
-    console.error('[Sanity] Failed to fetch homepage content:', error);
-    return null;
-  }
+  return safeFetch(query, {}, "Failed to fetch homepage content", null);
 }
 
 // Fetch projects page settings (should only be one document)
 export async function getProjectsPageSettings(): Promise<ProjectsPageSettings | null> {
   const query = `*[_type == "projectsPageSettings"][0] {
-    _id,
-    eyebrow,
-    title,
-    description,
-    footerCTA {
-      text,
-      linkText
-    }
+    _id, eyebrow, title, description, footerCTA { text, linkText }
   }`;
-
-  try {
-    return await client.fetch(query);
-  } catch (error) {
-    console.error('[Sanity] Failed to fetch projects page settings:', error);
-    return null;
-  }
+  return safeFetch(query, {}, "Failed to fetch projects page settings", null);
 }
 
 // Fetch contact page settings (should only be one document)
 export async function getContactPageSettings(): Promise<ContactPageSettings | null> {
   const query = `*[_type == "contactPageSettings"][0] {
-    _id,
-    eyebrow,
-    heading,
-    description,
-    formspreeId
+    _id, eyebrow, heading, description, formspreeId
   }`;
-
-  try {
-    return await client.fetch(query);
-  } catch (error) {
-    console.error('[Sanity] Failed to fetch contact page settings:', error);
-    return null;
-  }
+  return safeFetch(query, {}, "Failed to fetch contact page settings", null);
 }
 
 // Fetch a single project by slug with full content
-export async function getProjectBySlug(
-  slug: string
-): Promise<ProjectDetail | null> {
-  const query = `*[_type == "project" && slug.current == $slug][0] {
-    _id,
-    title,
-    slug,
-    description,
-    cardImage {
-      asset-> {
-        _ref,
-        url
-      }
-    },
-    mainImage {
-      asset-> {
-        _ref,
-        url
-      }
-    },
-    featured,
-    technologies,
-    projectUrl,
-    githubUrl,
-    content,
-    order
-  }`;
-
-  try {
-    return await client.fetch(query, { slug });
-  } catch (error) {
-    console.error(`[Sanity] Failed to fetch project with slug "${slug}":`, error);
-    return null;
-  }
+export async function getProjectBySlug(slug: string): Promise<ProjectDetail | null> {
+  const query = `*[_type == "project" && slug.current == $slug][0] {${PROJECT_FIELDS}, content}`;
+  return safeFetch(query, { slug }, `Failed to fetch project "${slug}"`, null);
 }
 
 // Fetch previous and next projects for navigation
-export async function getProjectNavigation(
-  currentOrder: number
-): Promise<ProjectNavigation> {
-  // Get previous project (lower order number)
-  const prevQuery = `*[_type == "project" && order < $currentOrder] | order(order desc)[0] {
-    title,
-    slug
-  }`;
-
-  // Get next project (higher order number)
-  const nextQuery = `*[_type == "project" && order > $currentOrder] | order(order asc)[0] {
-    title,
-    slug
-  }`;
+export async function getProjectNavigation(currentOrder: number): Promise<ProjectNavigation> {
+  const navFields = `title, slug`;
+  const prevQuery = `*[_type == "project" && order < $currentOrder] | order(order desc)[0] {${navFields}}`;
+  const nextQuery = `*[_type == "project" && order > $currentOrder] | order(order asc)[0] {${navFields}}`;
 
   try {
     const [previous, next] = await Promise.all([
       client.fetch(prevQuery, { currentOrder }),
       client.fetch(nextQuery, { currentOrder }),
     ]);
-
     return { previous, next };
   } catch (error) {
-    console.error('[Sanity] Failed to fetch project navigation:', error);
+    console.error("[Sanity] Failed to fetch project navigation:", error);
     return { previous: undefined, next: undefined };
   }
 }
 
 // Fetch all project slugs for static generation
 export async function getAllProjectSlugs(): Promise<{ slug: { current: string } }[]> {
-  const query = `*[_type == "project"] {
-    slug
-  }`;
-
-  try {
-    return await client.fetch(query);
-  } catch (error) {
-    console.error('[Sanity] Failed to fetch project slugs:', error);
-    return [];
-  }
+  const query = `*[_type == "project"] { slug }`;
+  return safeFetch(query, {}, "Failed to fetch project slugs", []);
 }

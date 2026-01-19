@@ -29,9 +29,11 @@ This will install all required packages including Next.js, React, Tailwind CSS, 
 Create a file named `.env.local` in the root directory of the project with the following content:
 
 ```env
-NEXT_PUBLIC_SANITY_PROJECT_ID=w8eezxao
+NEXT_PUBLIC_SANITY_PROJECT_ID=your-sanity-project-id
 NEXT_PUBLIC_SANITY_DATASET=production
 ```
+
+Get your project ID from https://sanity.io/manage - it's displayed on your project dashboard.
 
 **Important:** This file is not tracked in Git for security reasons, so you must create it manually on each computer.
 
