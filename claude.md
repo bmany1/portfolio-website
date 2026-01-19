@@ -1,7 +1,7 @@
 # Portfolio Website - Claude Context
 
 ## Project Overview
-Portfolio website for Bryan Many (Product Manager). Next.js 14 + TypeScript + Tailwind CSS + Framer Motion + Sanity.io CMS. Deployed on Vercel at https://portfolio-website-gamma-seven-65.vercel.app/
+Portfolio website for Bryan Many (Product Manager). Next.js 14 + TypeScript + Tailwind CSS + Framer Motion + Sanity.io CMS. Deployed on Vercel at https://bryanmany.com
 
 **GitHub**: https://github.com/bmany1/portfolio-website
 
@@ -22,7 +22,7 @@ Portfolio website for Bryan Many (Product Manager). Next.js 14 + TypeScript + Ta
 
 ### Deployment
 - **Vercel** - Auto-deploy from GitHub
-- **Domain**: bryanmany.com (pending transfer from Squarespace)
+- **Domain**: bryanmany.com
 - **Dependabot**: Weekly security scans enabled
 
 ## Project Structure (Simplified)
@@ -122,7 +122,7 @@ REVALIDATE_SECRET=your-webhook-secret
 - **WEBHOOK_SETUP.md** - Sanity webhook configuration (CDN cache purging)
 - **SANITY_SETUP.md** - Sanity CMS setup instructions
 
-## Current Status (as of 2025-12-30)
+## Current Status (as of 2025-01-19)
 
 **✅ Production-Ready Features:**
 - All pages built and deployed (Home, Projects, About, Contact)
@@ -135,11 +135,11 @@ REVALIDATE_SECRET=your-webhook-secret
 - Responsive design (mobile-first)
 - Security updates automated (Dependabot)
 - Mobile scroll behavior fixed (Chrome iOS, Safari)
+- Custom domain configured (bryanmany.com)
 
-**⏳ Pending:**
-- Domain transfer from Squarespace to Vercel
-- Analytics setup (optional)
-- SEO meta tags (optional)
+**⏳ Pending (Optional):**
+- Analytics setup
+- SEO meta tags
 
 ## Recent Updates
 
@@ -194,8 +194,8 @@ REVALIDATE_SECRET=your-webhook-secret
 
 ## Quick Reference
 
-**Production URL**: https://portfolio-website-gamma-seven-65.vercel.app/
-**Sanity Studio**: https://portfolio-website-gamma-seven-65.vercel.app/studio
+**Production URL**: https://bryanmany.com
+**Sanity Studio**: https://bryanmany.com/studio
 **GitHub**: https://github.com/bmany1/portfolio-website
 
 **User Context**: Product manager learning to code. Updates portfolio a few times per year. Prioritizes quality over speed.
