@@ -8,7 +8,7 @@ My personal portfolio site, built from scratch using Next.js, TypeScript, Tailwi
 
 ## About
 
-I'm a Product Manager with a UX focus. I built this site to showcase my work and learn more about modern web development in the process. The entire project was developed using [Claude Code](https://claude.ai/code), Anthropic's AI coding agent.
+I'm a Product Manager with a UX focus. I built this site to showcase my work and learn more about modern web development in the process. The entire project was developed using Claude Code, Anthropic's AI coding agent.
 
 ## Tech Stack
 
