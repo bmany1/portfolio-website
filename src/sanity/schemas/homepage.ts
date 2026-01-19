@@ -36,7 +36,8 @@ export default defineType({
           options: {
             hotspot: true,
           },
-          description: "Professional headshot photo",
+          description:
+            "Professional headshot photo. Also used for homepage social sharing/OG image (cropped to 1200x630)",
         }),
         defineField({
           name: "resumeFile",

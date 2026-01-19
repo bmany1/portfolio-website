@@ -22,6 +22,14 @@ export default defineType({
         "Product manager specializing in building modern web experiences that delight users and drive business impact.",
     }),
     defineField({
+      name: "ogImage",
+      title: "Default Open Graph Image",
+      type: "image",
+      description:
+        "Default image for social sharing. Optimal: 1200x630px (1.91:1 ratio). Used when page-specific images are unavailable.",
+      options: { hotspot: true },
+    }),
+    defineField({
       name: "email",
       title: "Email",
       type: "string",

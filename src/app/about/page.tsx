@@ -1,8 +1,52 @@
+import type { Metadata } from "next";
 import { PortableText } from "@portabletext/react";
 import Image from "next/image";
 import Link from "next/link";
 
 import { getAbout, getSiteSettings } from "@/sanity/queries";
+import { getOgImageUrl } from "@/lib/sanity-image";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const [aboutData, siteSettings] = await Promise.all([
+    getAbout(),
+    getSiteSettings(),
+  ]);
+
+  const title = "About";
+  const description = "Learn more about Bryan Many - product manager specializing in building modern web experiences.";
+
+  // Use profile image if available, otherwise fall back to default OG image
+  const ogImageSource = aboutData?.profileImage?.asset
+    ? aboutData.profileImage
+    : siteSettings?.ogImage?.asset
+      ? siteSettings.ogImage
+      : undefined;
+  const ogImageUrl = ogImageSource ? getOgImageUrl(ogImageSource) : undefined;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title: `${title} | Bryan Many`,
+      description,
+      ...(ogImageUrl && {
+        images: [
+          {
+            url: ogImageUrl,
+            width: 1200,
+            height: 630,
+            alt: aboutData?.title || "Bryan Many",
+          },
+        ],
+      }),
+    },
+    twitter: {
+      title: `${title} | Bryan Many`,
+      description,
+      ...(ogImageUrl && { images: [ogImageUrl] }),
+    },
+  };
+}
 
 export default async function AboutPage() {
   // Fetch about page content and site settings from Sanity

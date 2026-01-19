@@ -51,6 +51,25 @@ export function getHeroImageUrl(
 }
 
 /**
+ * Get optimized image URL for Open Graph/social sharing (1.91:1 aspect ratio)
+ * Standard OG image size is 1200x630px
+ * @param source - Sanity image source
+ * @param width - Desired width in pixels (default: 1200)
+ */
+export function getOgImageUrl(
+  source: SanityImageSource,
+  width: number = 1200
+): string {
+  return urlFor(source)
+    .width(width)
+    .height(Math.round(width / 1.91)) // 1.91:1 ratio = 630px at 1200w
+    .quality(85)
+    .auto("format")
+    .fit("crop")
+    .url();
+}
+
+/**
  * Get optimized image URL with custom dimensions
  * @param source - Sanity image source
  * @param width - Desired width in pixels

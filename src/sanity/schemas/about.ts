@@ -29,6 +29,8 @@ export default defineType({
       options: {
         hotspot: true,
       },
+      description:
+        "Profile photo displayed on About page. Also used for social sharing/OG image (cropped to 1200x630)",
     }),
     defineField({
       name: "skills",

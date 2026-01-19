@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import CTASection from "@/components/CTASection";
@@ -5,8 +6,52 @@ import FeaturedProjects from "@/components/FeaturedProjects";
 import HeroSection from "@/components/HeroSection";
 import WhatIDoSection from "@/components/WhatIDoSection";
 import WhereIveWorked from "@/components/WhereIveWorked";
-import { getFeaturedProjects, getHomepage } from "@/sanity/queries";
+import { getFeaturedProjects, getHomepage, getSiteSettings } from "@/sanity/queries";
 import { featuredPlaceholderProjects } from "@/lib/placeholders";
+import { getOgImageUrl } from "@/lib/sanity-image";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const [homepage, siteSettings] = await Promise.all([
+    getHomepage(),
+    getSiteSettings(),
+  ]);
+
+  const description =
+    homepage?.heroSection?.bio ||
+    siteSettings?.siteDescription ||
+    "Product manager specializing in building modern web experiences";
+
+  // Use headshot image if available, otherwise fall back to default OG image
+  const ogImageSource = homepage?.heroSection?.headshotImage?.asset
+    ? homepage.heroSection.headshotImage
+    : siteSettings?.ogImage?.asset
+      ? siteSettings.ogImage
+      : undefined;
+  const ogImageUrl = ogImageSource ? getOgImageUrl(ogImageSource) : undefined;
+
+  return {
+    description,
+    openGraph: {
+      title: "Bryan Many | Product Manager",
+      description,
+      ...(ogImageUrl && {
+        images: [
+          {
+            url: ogImageUrl,
+            width: 1200,
+            height: 630,
+            alt: "Bryan Many",
+          },
+        ],
+      }),
+    },
+    twitter: {
+      title: "Bryan Many | Product Manager",
+      description,
+      ...(ogImageUrl && { images: [ogImageUrl] }),
+    },
+  };
+}
 
 export default async function Home() {
   // Fetch homepage content and featured projects from Sanity

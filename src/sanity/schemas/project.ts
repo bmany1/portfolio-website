@@ -33,7 +33,8 @@ export default defineType({
       name: "cardImage",
       title: "Card Image",
       type: "image",
-      description: "Image shown on project cards (16:10 aspect ratio). Optimal size: 1600x1000px or 800x500px",
+      description:
+        "Image shown on project cards (16:10 aspect ratio). Also used for social sharing/OG images (cropped to 1200x630). Optimal size: 1600x1000px or 800x500px",
       options: {
         hotspot: true,
       },
@@ -42,7 +43,8 @@ export default defineType({
       name: "mainImage",
       title: "Hero Image",
       type: "image",
-      description: "Large masthead image on project detail page. Optimal size: 1920x1080px",
+      description:
+        "Large masthead image on project detail page. Fallback for OG image if cardImage is not set. Optimal size: 1920x1080px",
       options: {
         hotspot: true,
       },

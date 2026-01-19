@@ -96,6 +96,12 @@ export interface SiteSettings {
   _id: string;
   siteName: string;
   siteDescription?: string;
+  ogImage?: {
+    asset: {
+      _ref: string;
+      url?: string;
+    };
+  };
   email?: string;
   socialLinks?: SocialLink[];
 }
@@ -201,7 +207,7 @@ export async function getAbout(): Promise<About | null> {
 // Fetch site settings (should only be one document)
 export async function getSiteSettings(): Promise<SiteSettings | null> {
   const query = `*[_type == "siteSettings"][0] {
-    _id, siteName, siteDescription, email, socialLinks
+    _id, siteName, siteDescription, ogImage { asset-> { _ref, url } }, email, socialLinks
   }`;
   return safeFetch(query, {}, "Failed to fetch site settings", null);
 }
