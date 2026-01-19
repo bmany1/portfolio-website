@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portfolio Website
 
-## Getting Started
+My personal portfolio site, built from scratch using Next.js, TypeScript, Tailwind CSS, and Sanity CMS. Deployed on Vercel.
 
-First, run the development server:
+**Live site:** [bryanmany.com](https://bryanmany.com)
 
+![Portfolio Screenshot](https://cdn.sanity.io/images/w8eezxao/production/2e82c7f796b60cb2bfd290fbb37903d2f70dcc1d-1600x1000.jpg)
+
+## About
+
+I'm a Product Manager with a UX focus. I built this site to showcase my work and learn more about modern web development in the process. The entire project was developed using [Claude Code](https://claude.ai/code), Anthropic's AI coding agent.
+
+## Tech Stack
+
+- **Framework:** Next.js 16 (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS v4
+- **Animations:** Framer Motion
+- **CMS:** Sanity.io
+- **Deployment:** Vercel
+- **Contact Form:** Formspree
+
+## Features
+
+- All content managed through Sanity CMS
+- Scroll-triggered animations throughout
+- Responsive design (mobile-first)
+- Image optimization via Sanity CDN (WebP, 60-80% file size reduction)
+- Instant cache invalidation via webhook
+- Automated security scans with Dependabot
+
+## Project Structure
+
+src/
+
+├── app/
+
+│   ├── page.tsx              # Homepage
+
+│   ├── projects/             # Projects listing + detail pages
+
+│   ├── about/                # About page
+
+│   ├── contact/              # Contact form
+
+│   └── studio/               # Embedded Sanity Studio
+
+├── components/               # Reusable UI components
+
+├── sanity/                   # CMS schemas and queries
+
+└── lib/                      # Utility functions
+
+## Local Development
 ```bash
+# Install dependencies
+npm install
+
+# Start dev server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Open http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Environment Variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Create a `.env.local` file with:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+NEXT_PUBLIC_SANITY_PROJECT_ID=your-project-id
 
-## Learn More
+NEXT_PUBLIC_SANITY_DATASET=production
 
-To learn more about Next.js, take a look at the following resources:
+REVALIDATE_SECRET=your-webhook-secret
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## License
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is for personal use. Feel free to use it as inspiration for your own portfolio.
