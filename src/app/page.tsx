@@ -21,13 +21,10 @@ export async function generateMetadata(): Promise<Metadata> {
     siteSettings?.siteDescription ||
     "Product manager specializing in building modern web experiences";
 
-  // Use headshot image if available, otherwise fall back to default OG image
-  const ogImageSource = homepage?.heroSection?.headshotImage?.asset
-    ? homepage.heroSection.headshotImage
-    : siteSettings?.ogImage?.asset
-      ? siteSettings.ogImage
-      : undefined;
-  const ogImageUrl = ogImageSource ? getOgImageUrl(ogImageSource) : undefined;
+  // Use default OG image from site settings
+  const ogImageUrl = siteSettings?.ogImage?.asset
+    ? getOgImageUrl(siteSettings.ogImage)
+    : undefined;
 
   return {
     description,
