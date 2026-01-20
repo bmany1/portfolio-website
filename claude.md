@@ -58,7 +58,7 @@ src/
 All content managed through Sanity Studio at `/studio`:
 
 - **homepage** (singleton) - Hero, What I Do, Featured Work sections
-- **siteSettings** (singleton) - Email, social links (global)
+- **siteSettings** (singleton) - Email, social links, default OG image (global)
 - **project** - Title, slug, cardImage, heroImage, content (PortableText with images/videos), tech stack
 - **about** - Bio, skills, profile image
 - **projectsPageSettings** (singleton) - Page header + footer CTA
@@ -77,6 +77,7 @@ All content managed through Sanity Studio at `/studio`:
 - Sanity CDN with automatic WebP conversion
 - `getCardImageUrl()`: 1600px, 85% quality, 16:10 ratio
 - `getHeroImageUrl()`: 1920px, 90% quality, 16:9 ratio
+- `getOgImageUrl()`: 1200x630px, 85% quality, 1.91:1 ratio (social sharing)
 - Retroactive optimization (existing images auto-optimized)
 - 60-80% file size reduction typical
 
@@ -136,12 +137,24 @@ REVALIDATE_SECRET=your-webhook-secret
 - Security updates automated (Dependabot)
 - Mobile scroll behavior fixed (Chrome iOS, Safari)
 - Custom domain configured (bryanmany.com)
+- Open Graph images for social sharing
 
 **⏳ Pending (Optional):**
 - Analytics setup
-- SEO meta tags
 
 ## Recent Updates
+
+### 2025-01-19: Open Graph Image Support
+- Added OG image meta tags for improved social sharing previews
+- New `ogImage` field in siteSettings schema for default fallback image (1200x630px)
+- Dynamic `generateMetadata()` in `layout.tsx` with `metadataBase` and title template
+- Per-page OG image fallback chains:
+  - **Home/Contact/Projects listing**: Default OG image from siteSettings
+  - **About**: Profile image → default
+  - **Project detail**: cardImage → mainImage → default
+- New `getOgImageUrl()` utility in `sanity-image.ts` (1.91:1 ratio, auto-crop)
+- Updated schema descriptions to document OG image usage
+- Test with: https://www.opengraph.xyz/ or Facebook/Twitter debuggers
 
 ### 2025-12-30: iOS Tag Truncation Scroll Fix
 - Fixed "+N more" indicator flickering during scroll on iOS (Chrome and Safari)
