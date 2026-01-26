@@ -31,9 +31,11 @@ Create a file named `.env.local` in the root directory of the project with the f
 ```env
 NEXT_PUBLIC_SANITY_PROJECT_ID=your-sanity-project-id
 NEXT_PUBLIC_SANITY_DATASET=production
+REVALIDATE_SECRET=your-webhook-secret
 ```
 
-Get your project ID from https://sanity.io/manage - it's displayed on your project dashboard.
+- Get your project ID from https://sanity.io/manage - it's displayed on your project dashboard.
+- The `REVALIDATE_SECRET` is used for webhook authentication to enable instant content updates. See `WEBHOOK_SETUP.md` for details.
 
 **Important:** This file is not tracked in Git for security reasons, so you must create it manually on each computer.
 
@@ -69,7 +71,7 @@ npm run check        # Run both lint and type-check
 
 ## Tech Stack
 
-- **Next.js 14** - React framework with App Router
+- **Next.js 16** - React framework with App Router
 - **TypeScript** - Type-safe development
 - **Tailwind CSS** - Utility-first styling
 - **Framer Motion** - Animation library
@@ -101,11 +103,16 @@ Double-check that your `.env.local` file exists and contains the correct values.
 ### Cannot access Sanity Studio
 Make sure you're logged in with the Sanity account that owns the project. Visit https://www.sanity.io/manage to verify.
 
+### Sanity Studio shows "Trying to connect..." indefinitely
+This is often caused by antivirus software (TotalAV, Norton, etc.) blocking Server-Sent Events connections. Disable your antivirus web shield temporarily, or add `*.sanity.io` and `*.api.sanity.io` to its Allow List.
+
 ## Production Deployment
 
 This project is automatically deployed to Vercel:
-- **Production URL**: https://portfolio-website-gamma-seven-65.vercel.app/
+- **Production URL**: https://bryanmany.com
 - Every push to the `main` branch triggers a new deployment
+
+For instant content updates in production, configure the Sanity webhook. See `WEBHOOK_SETUP.md`.
 
 ## Need Help?
 
