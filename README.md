@@ -34,21 +34,13 @@ I'm a Product Manager with a UX focus. I built this site to showcase my work and
 src/
 
 ├── app/
-
 │   ├── page.tsx              # Homepage
-
 │   ├── projects/             # Projects listing + detail pages
-
 │   ├── about/                # About page
-
 │   ├── contact/              # Contact form
-
 │   └── studio/               # Embedded Sanity Studio
-
 ├── components/               # Reusable UI components
-
 ├── sanity/                   # CMS schemas and queries
-
 └── lib/                      # Utility functions
 
 ## Local Development
