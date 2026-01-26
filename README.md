@@ -58,13 +58,13 @@ npm run dev
 ## Environment Variables
 
 Create a `.env.local` file with:
-
+```
 NEXT_PUBLIC_SANITY_PROJECT_ID=your-project-id
 
 NEXT_PUBLIC_SANITY_DATASET=production
 
 REVALIDATE_SECRET=your-webhook-secret
-
+```
 ## License
 
 This project is for personal use. Feel free to use it as inspiration for your own portfolio.
