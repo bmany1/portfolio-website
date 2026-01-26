@@ -31,8 +31,8 @@ I'm a Product Manager with a UX focus. I built this site to showcase my work and
 
 ## Project Structure
 
+```
 src/
-
 ├── app/
 │   ├── page.tsx              # Homepage
 │   ├── projects/             # Projects listing + detail pages
@@ -42,6 +42,7 @@ src/
 ├── components/               # Reusable UI components
 ├── sanity/                   # CMS schemas and queries
 └── lib/                      # Utility functions
+```
 
 ## Local Development
 ```bash
