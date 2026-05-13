@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import { getAbout, getSiteSettings } from "@/sanity/queries";
 import { getOgImageUrl } from "@/lib/sanity-image";
+import { portableTextComponents } from "@/components/portableTextComponents";
 
 export async function generateMetadata(): Promise<Metadata> {
   const [aboutData, siteSettings] = await Promise.all([
@@ -74,11 +75,7 @@ export default async function AboutPage() {
             {aboutData?.bio ? (
               <PortableText
                 value={aboutData.bio}
-                components={{
-                  block: {
-                    normal: ({ children }) => <p>{children}</p>,
-                  },
-                }}
+                components={portableTextComponents}
               />
             ) : (
               <>
